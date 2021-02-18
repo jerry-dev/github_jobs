@@ -1,6 +1,6 @@
-import AppHeader from '../.../appheader/src/AppHeader.js';
+import AppHeader from '../../appheader/src/AppHeader.js';
 
-class GithubJobsApp extends HTMLEmbedElement {
+class GithubJobsApp extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
@@ -11,8 +11,22 @@ class GithubJobsApp extends HTMLEmbedElement {
     }
 
     render() {
+        this.html();
+        // this.defaultCSS();
+    }
+
+    html() {
         this.shadowRoot.innerHTML += `
             <app-header></app-header>
+        `;
+    }
+
+    defaultCSS() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                :host {
+                }
+            </style>
         `;
     }
 }
