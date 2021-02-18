@@ -9,24 +9,10 @@ class GithubJobsApp extends HTMLElement {
     connectedCallback() {
         this.render();
     }
-
+    
     render() {
-        this.html();
-        // this.defaultCSS();
-    }
-
-    html() {
         this.shadowRoot.innerHTML += `
             <app-header></app-header>
-        `;
-    }
-
-    defaultCSS() {
-        this.shadowRoot.innerHTML += `
-            <style>
-                :host {
-                }
-            </style>
         `;
     }
 }
