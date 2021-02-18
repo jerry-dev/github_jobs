@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "browserSync": "browser-sync start --index public/index.html --browser wslview --server --files=src"
   },
   "keywords": [],
   "author": "",
