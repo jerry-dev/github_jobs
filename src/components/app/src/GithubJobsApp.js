@@ -1,4 +1,5 @@
 import AppHeader from '../../appheader/src/AppHeader.js';
+import FilterForm from '../../filterform/src/FilterForm.js';
 
 class GithubJobsApp extends HTMLElement {
     constructor() {
@@ -9,10 +10,11 @@ class GithubJobsApp extends HTMLElement {
     connectedCallback() {
         this.render();
     }
-    
+
     render() {
         this.shadowRoot.innerHTML += `
             <app-header></app-header>
+            <filter-form></filter-form>>
         `;
     }
 }
