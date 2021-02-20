@@ -3,11 +3,14 @@
 :root {
     --blue-1: rgb(89, 100, 224);
     --dark-grey: rgb(110, 128, 152);
+    --opaque-dark-grey: rgba(110, 128, 152, 0.2);
     --grey: rgb(157, 174, 194);
     --light-grey: rgb(244, 246, 248);
     --light-violet: rgb(147, 155, 244);
     --midnight: rgb(18, 23, 33);
     --very-dark-blue: rgb(25, 32, 45);
+    --opaque-very-dark-blue-1: rgba(25, 32, 45, 0.1);
+    --opaque-very-dark-blue-2: rgba(25, 32, 45, 0.5);
     --violet: rgb(158, 127, 102);
     --white: rgb(255, 255, 255);
     --h4-height: 18px;
@@ -20,7 +23,8 @@
     --h1-size: 28px;
     --font-family-1: 'Kumbh Sans', sans-serif;
     --font-size-1: 16px;
-    --line-height-1: 26px;
+    --line-height-1: 16px;
+    --line-height-2: 26px;
 }
 
 html {
@@ -48,7 +52,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     max-width: 1440px;
-    padding-left: 10.35%;
-    padding-right: 10.35%;
+    padding-left: clamp(33px, 12vw, 165px);
+    padding-right: clamp(33px, 12vw, 165px);
     OUTLINE: 2PX SOLID gold;
 }

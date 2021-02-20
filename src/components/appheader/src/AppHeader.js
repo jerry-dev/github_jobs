@@ -33,7 +33,6 @@ export default class AppHeader extends HTMLElement {
                     display: block;
                     padding-bottom: 44px;
                     padding-top: 45px;
-                    OUTLINE: 1PX SOLID red;
                 }
 
                 #headerInnerContainer {

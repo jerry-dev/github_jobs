@@ -12,9 +12,25 @@ class GithubJobsApp extends HTMLElement {
     }
 
     render() {
+        this.html();
+        this.css();
+    }
+
+    html() {
         this.shadowRoot.innerHTML += `
             <app-header></app-header>
-            <filter-form></filter-form>>
+            <filter-form></filter-form>
+        `;
+    }
+    
+    css() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                :host {
+                    display: block;
+                    width: 100%;
+                }
+            </style>
         `;
     }
 }
