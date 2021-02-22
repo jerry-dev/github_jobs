@@ -29,9 +29,11 @@ export default class FilterForm extends HTMLElement {
                     <input type="text" placeholder="Filter by location…">
                 </span>
                 <span class="iconInputGroup">
-                    <input type="checkbox" id="fullTimeOnlyOption">
-                    <label for="fullTimeOnlyOption">Full Time Only</label>
-                    <button>Search</button>
+                    <span>
+                        <input type="checkbox" id="fullTimeOnlyOption">
+                        <label for="fullTimeOnlyOption">Full Time Only</label>
+                        <button>Search</button>
+                    </span>
                 </span>
             </div>
         `;
@@ -43,10 +45,10 @@ export default class FilterForm extends HTMLElement {
                 *, *::before, *::after { padding: 0; margin: 0; }
 
                 :host {
-                    background-color: var(--white);
                     border-radius: 6px;
                     display: block;
-                    height: 80px;
+                    margin-right: auto;
+                    margin-left: auto;
                 }
 
                 #filterFormInnerContainer {
@@ -57,12 +59,18 @@ export default class FilterForm extends HTMLElement {
 
                 .iconInputGroup {
                     align-items: center;
+                    background-color: var(--white);
                     display: flex;
                     flex-direction: row;
                     justify-content: left;
                     padding-bottom: 28px;
                     padding-top: 28px;
-                    OUTLINE: 2PX SOLID RED;
+                    
+                }
+
+                .inputGroupInnerContainer {
+                    max-height: 24px;
+                    width: 100%;
                 }
 
                 .iconInputGroup > input {
@@ -76,7 +84,12 @@ export default class FilterForm extends HTMLElement {
 
                 .iconInputGroup:nth-child(1),
                 .iconInputGroup:nth-child(2) {
-                    border: 1px solid var(--opaque-dark-grey);
+                    border-right: 1px solid var(--opaque-dark-grey);
+                }
+
+                .iconInputGroup:nth-child(1) input:focus,
+                .iconInputGroup:nth-child(2) input:focus {
+                    outline: none;
                 }
 
                 .iconInputGroup:nth-child(1) img,
@@ -107,7 +120,15 @@ export default class FilterForm extends HTMLElement {
                     padding-left: clamp(6.4px, 3vw, 32px);
                     padding-right: clamp(3.2px, 1vw, 16px);
                     position: relative;
-                    OUTLINE: 2PX SOLID BLACK;
+                    width: 100%;
+                }
+
+                .iconInputGroup:nth-child(3) span {
+                    align-items: center;
+                    display: flex;
+                    justify-content: space-between;
+                    max-height: 24px;
+                    width: 100%;
                 }
                 
                 .iconInputGroup:nth-child(3) input {
@@ -119,8 +140,8 @@ export default class FilterForm extends HTMLElement {
                     content: "";
                     cursor: pointer;
                     position: absolute;
-                    left: 26px;
-                    top: 40px;
+                    left: 31px;
+                    top: 28px;
                     width: 24px;
                     height: 24px;
                     background-color: var(--opaque-very-dark-blue-1);
@@ -133,19 +154,16 @@ export default class FilterForm extends HTMLElement {
                     background-position: center;
                 }
 
-
-
-
                 .iconInputGroup:nth-child(3) label {
                     font-weight: bold;
                     margin-right: 26px;
-                    Xwhite-space: nowrap;
                 }
 
                 .iconInputGroup:nth-child(3) button {
                     background-color: var(--blue-1);
                     border: none;
                     border-radius: 5px;
+                    cursor: pointer;
                     color: var(--white);
                     font-size: var(--font-size-1);
                     line-height: var(--line-height-1);
