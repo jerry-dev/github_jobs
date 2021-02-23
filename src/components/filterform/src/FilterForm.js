@@ -23,14 +23,14 @@ export default class FilterForm extends HTMLElement {
         this.shadowRoot.innerHTML += `
             <div id="filterFormInnerContainer">
                 <span class="iconInputGroup">
-                    <img id="searchIcon1" src="../src/assets/icons/desktop/icon-search.svg">
-                    <input type="text" placeholder="Filter by title, companies, expertise…">
-                    <div id="mobileIcons">
-                        <img id="filterIcon" src="../src/assets/icons/mobile/icon-filter.svg">
-                        <span id="mobileSearchIconsContainer">
+                    <span>
+                        <img id="searchIcon1" src="../src/assets/icons/desktop/icon-search.svg">
+                        <input type="text" placeholder="Filter by title, companies, expertise…">
+                        <img id="filterIcon" class="mobileIcons" src="../src/assets/icons/mobile/icon-filter.svg">
+                        <button type="button" class="mobileIcons">
                             <img src="../src/assets/icons/mobile/003-search.svg">
-                        </span>
-                    </div>
+                        </button>
+                    </span>
                 </span>
                 <span class="iconInputGroup">
                     <img src="../src/assets/icons/desktop/icon-location.svg">
@@ -40,7 +40,7 @@ export default class FilterForm extends HTMLElement {
                     <span>
                         <input type="checkbox" id="fullTimeOnlyOption">
                         <label for="fullTimeOnlyOption">Full Time <span id="only">Only</span></label>
-                        <button>Search</button>
+                        <button type="button">Search</button>
                     </span>
                 </span>
             </div>
@@ -57,7 +57,7 @@ export default class FilterForm extends HTMLElement {
                     width: 100%;
                 }
 
-                #mobileIcons {
+                .mobileIcons {
                     display: none;
                 }
 
@@ -77,17 +77,17 @@ export default class FilterForm extends HTMLElement {
                     padding-top: 28px;                    
                 }
 
-                .inputGroupInnerContainer {
+                .iconInputGroup:nth-child(1) {
                     max-height: 24px;
                     width: 100%;
                 }
 
-                .iconInputGroup > input {
+                .iconInputGroup input {
                     border: none;
                     font-size: clamp(8px, 2vw, var(--font-size-1));
                 }
 
-                .iconInputGroup > input::placeholder {
+                .iconInputGroup input::placeholder {
                     color: var(--opaque-very-dark-blue-2);
                 }
 
@@ -116,6 +116,14 @@ export default class FilterForm extends HTMLElement {
 
                 .iconInputGroup:nth-child(1) input {
                     width: clamp(54.2px, 19vw, 271px);
+                }
+
+                .iconInputGroup:nth-child(1) span {
+                    align-items: center;
+                    display: flex;
+                    justify-content: space-between;
+                    max-height: 24px;
+                    width: 100%;
                 }
 
                 .iconInputGroup:nth-child(2) {
@@ -247,47 +255,60 @@ export default class FilterForm extends HTMLElement {
             <style>
                 @media screen and (max-width: 375px) {
                     .iconInputGroup {
-                        padding-bottom: 34px;
-                        padding-top: 34px;
-                        max-height: 16px;
-                    }
-                    
-                    .iconInputGroup {
                         border-radius: 6px 6px 6px 6px;
                         display: flex;
                         justify-content: space-between;
+                        padding-bottom: 34px;
+                        padding-top: 34px;
                         width: 100%;
+                    }
+
+                    .iconInputGroup:nth-child(1) {
+                        padding-left: 24px;
+                        padding-right: 16px;
+                    }
+
+                    .iconInputGroup:nth-child(1) span {
+                        max-height: 16px;
                     }
 
                     #searchIcon1 {
                         display: none;
                     }
 
-                    #mobileIcons {
-                        display: flex;
+                    .mobileIcons {
+                        display: block;
                     }
 
-                    .iconInputGroup > input {
+                    .iconInputGroup input {
                         font-size: clamp(8px, 5vw, var(--font-size-1));
                     }
 
-                    #mobileSearchIconsContainer {
+                    #filterIcon {
+                        margin-left: auto;
+                        margin-right: 24.03px;
+                    }
+
+                    .iconInputGroup:nth-child(1) input {
+                        border: none;
+                        width: clamp(21px, 28vw, 105px);
+                    }
+
+                    .iconInputGroup:nth-child(1) button {
                         background-color: var(--blue-1);
+                        border: none;
                         border-radius: 5px;
-                        padding-botoom: 14px;
+                        padding-bottom: 14px;
                         padding-top: 14px;
                         padding-left: 14px;
                         padding-right: 14px;
+                        max-height: 48px;
+                        max-width: 48px;
                     }
 
                     .iconInputGroup:nth-child(2),
                     .iconInputGroup:nth-child(3) {
                         display: none;
-                    }
-
-                    .iconInputGroup:nth-child(1) input {
-                        padding-left: 24px;
-                        width: clamp(21px, 5vw, 105px);
                     }
                 }
             </style>
