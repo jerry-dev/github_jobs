@@ -56,3 +56,19 @@ body {
     padding-right: clamp(33px, 12vw, 165px);
     OUTLINE: 2PX SOLID gold;
 }
+
+@media screen and (max-width: 768px) {
+    #app-wrapper {
+        background-image: url('../assets/icons/tablet/bg-pattern-header.svg');
+        padding-left: clamp(7.8px, 6vw, 39px);
+        padding-right: clamp(8px, 6vw, 40px);
+    }
+}
+
+@media screen and (max-width: 375px) {
+    #app-wrapper {
+        background-image: url('../assets/icons/mobile/bg-pattern-header.svg');
+        padding-left: clamp(4.8px, 7vw, 24px);
+        padding-right: clamp(4.8px, 7vw, 24px);
+    }
+}

@@ -13,6 +13,8 @@ export default class AppHeader extends HTMLElement {
     render() {
         this.html();
         this.defaultCSS();
+        this.tabletLayoutCSS();
+        this.mobiletLayoutCSS();
     }
 
     html() {
@@ -41,6 +43,32 @@ export default class AppHeader extends HTMLElement {
                     flex-direction: row;
                     justify-content: space-between;
                     max-height: 32px;
+                }
+            </style>
+        `;
+    }
+
+    tabletLayoutCSS() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                @media screen and (max-width: 768px) {
+                    :host {
+                        padding-bottom: 46px;
+                        padding-top: 42px;
+                    }
+                }
+            </style>
+        `;
+    }
+
+    mobiletLayoutCSS() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                @media screen and (max-width: 375px) {
+                    :host {
+                        padding-bottom: 32px;
+                        padding-top: 32px;
+                    }
                 }
             </style>
         `;

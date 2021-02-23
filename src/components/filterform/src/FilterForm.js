@@ -15,14 +15,22 @@ export default class FilterForm extends HTMLElement {
     render() {
         this.html();
         this.defaultCSS();
+        this.tabletLayoutCSS();
+        this.mobileLayoutCSS();
     }
 
     html() {
         this.shadowRoot.innerHTML += `
             <div id="filterFormInnerContainer">
                 <span class="iconInputGroup">
-                    <img src="../src/assets/icons/desktop/icon-search.svg">
+                    <img id="searchIcon1" src="../src/assets/icons/desktop/icon-search.svg">
                     <input type="text" placeholder="Filter by title, companies, expertise…">
+                    <div id="mobileIcons">
+                        <img id="filterIcon" src="../src/assets/icons/mobile/icon-filter.svg">
+                        <span id="mobileSearchIconsContainer">
+                            <img src="../src/assets/icons/mobile/003-search.svg">
+                        </span>
+                    </div>
                 </span>
                 <span class="iconInputGroup">
                     <img src="../src/assets/icons/desktop/icon-location.svg">
@@ -31,7 +39,7 @@ export default class FilterForm extends HTMLElement {
                 <span class="iconInputGroup">
                     <span>
                         <input type="checkbox" id="fullTimeOnlyOption">
-                        <label for="fullTimeOnlyOption">Full Time Only</label>
+                        <label for="fullTimeOnlyOption">Full Time <span id="only">Only</span></label>
                         <button>Search</button>
                     </span>
                 </span>
@@ -45,10 +53,12 @@ export default class FilterForm extends HTMLElement {
                 *, *::before, *::after { padding: 0; margin: 0; }
 
                 :host {
-                    border-radius: 6px;
                     display: block;
-                    margin-right: auto;
-                    margin-left: auto;
+                    width: 100%;
+                }
+
+                #mobileIcons {
+                    display: none;
                 }
 
                 #filterFormInnerContainer {
@@ -64,8 +74,7 @@ export default class FilterForm extends HTMLElement {
                     flex-direction: row;
                     justify-content: left;
                     padding-bottom: 28px;
-                    padding-top: 28px;
-                    
+                    padding-top: 28px;                    
                 }
 
                 .inputGroupInnerContainer {
@@ -75,7 +84,7 @@ export default class FilterForm extends HTMLElement {
 
                 .iconInputGroup > input {
                     border: none;
-                    font-size: var(--font-size-1);
+                    font-size: clamp(8px, 2vw, var(--font-size-1));
                 }
 
                 .iconInputGroup > input::placeholder {
@@ -96,9 +105,11 @@ export default class FilterForm extends HTMLElement {
                 .iconInputGroup:nth-child(2) img,
                 .iconInputGroup:nth-child(3) input  {
                     margin-right: 16px;
+                    margin-right: clamp(8px, 2vw, 16px);
                 }
 
                 .iconInputGroup:nth-child(1) {
+                    border-radius: 6px 0 6px 0;
                     padding-left: clamp(6.4px, 2.88%, 32px);
                     padding-right: clamp(23.8px, 10.720%, 119px);
                 }
@@ -117,6 +128,7 @@ export default class FilterForm extends HTMLElement {
                 }
 
                 .iconInputGroup:nth-child(3) {
+                    border-radius: 0 6px 0 6px;
                     padding-left: clamp(6.4px, 3vw, 32px);
                     padding-right: clamp(3.2px, 1vw, 16px);
                     position: relative;
@@ -140,7 +152,7 @@ export default class FilterForm extends HTMLElement {
                     content: "";
                     cursor: pointer;
                     position: absolute;
-                    left: 31px;
+                    left: 9%;
                     top: 28px;
                     width: 24px;
                     height: 24px;
@@ -155,8 +167,10 @@ export default class FilterForm extends HTMLElement {
                 }
 
                 .iconInputGroup:nth-child(3) label {
+                    font-size: clamp(8px, 2vw, var(--font-size-1));
                     font-weight: bold;
-                    margin-right: 26px;
+                    margin-right: clamp(13px, 2vw, 26px);
+
                 }
 
                 .iconInputGroup:nth-child(3) button {
@@ -165,13 +179,116 @@ export default class FilterForm extends HTMLElement {
                     border-radius: 5px;
                     cursor: pointer;
                     color: var(--white);
-                    font-size: var(--font-size-1);
+                    font-size: clamp(var(--font-size-1)/2, 2vw, var(--font-size-1));
                     line-height: var(--line-height-1);
                     font-weight: bold;
                     padding-bottom: 16px;
                     padding-top: 16px;
                     padding-left: clamp(7px, 3vw, 35.5px);
                     padding-right: clamp(7px, 3vw, 35.5px);
+                }
+            </style>
+        `;
+    }
+
+    tabletLayoutCSS() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                @media screen and (max-width: 768px) {
+                    .iconInputGroup > input {
+                        font-size: clamp(8px, 2vw, var(--font-size-1));
+                    }
+
+                    .iconInputGroup:nth-child(1) img,
+                    .iconInputGroup:nth-child(2) img,
+                    .iconInputGroup:nth-child(3) input  {
+                        margin-right: 16px;
+                        margin-right: clamp(8px, 2vw, 16px);
+                    }
+
+                    .iconInputGroup:nth-child(1) {
+                        padding-left: clamp(4.8px, 3vw, 24px);
+                        padding-right: clamp(10.2px, 7vw, 51px);
+                    }
+
+                    .iconInputGroup:nth-child(1) input {
+                        width: clamp(21px, 14vw, 105px);
+                    }
+
+                    .iconInputGroup:nth-child(2) {
+                        padding-left: clamp(4.8px, 3vw, 24px);
+                        padding-right: clamp(4.2px, 3vw, 21px);
+                    }
+    
+                    .iconInputGroup:nth-child(2) input {
+                        width: clamp(27px, 18vw, 135px);
+                    }
+
+                    .iconInputGroup:nth-child(3) {
+                        padding-left: clamp(4px, 3vw, 20px);
+                        padding-right: clamp(3.2px, 2vw, 16px);
+                    }
+
+                    .iconInputGroup:nth-child(3) button {
+                        padding-left: clamp(2.8px, 2vw, 14px);
+                        padding-right: clamp(2.8px, 2vw, 14px);
+                    }
+
+                    #only {
+                        display: none;
+                    }
+                }
+            </style>
+        `;
+    }
+
+    mobileLayoutCSS() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                @media screen and (max-width: 375px) {
+                    .iconInputGroup {
+                        padding-bottom: 34px;
+                        padding-top: 34px;
+                        max-height: 16px;
+                    }
+                    
+                    .iconInputGroup {
+                        border-radius: 6px 6px 6px 6px;
+                        display: flex;
+                        justify-content: space-between;
+                        width: 100%;
+                    }
+
+                    #searchIcon1 {
+                        display: none;
+                    }
+
+                    #mobileIcons {
+                        display: flex;
+                    }
+
+                    .iconInputGroup > input {
+                        font-size: clamp(8px, 5vw, var(--font-size-1));
+                    }
+
+                    #mobileSearchIconsContainer {
+                        background-color: var(--blue-1);
+                        border-radius: 5px;
+                        padding-botoom: 14px;
+                        padding-top: 14px;
+                        padding-left: 14px;
+                        padding-right: 14px;
+                    }
+
+                    .iconInputGroup:nth-child(2),
+                    .iconInputGroup:nth-child(3) {
+                        display: none;
+                    }
+
+                    .iconInputGroup:nth-child(1) input {
+                        padding-left: 24px;
+                        width: clamp(21px, 5vw, 105px);
+                    }
                 }
             </style>
         `;
