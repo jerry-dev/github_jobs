@@ -1,3 +1,5 @@
+import FilterFormModal from '../../filterformmodal/src/FilterFormModal.js';
+
 export default class FilterForm extends HTMLElement {
     static get observedAttributes() {
         return ['filterKeyword, filterLocation, fullTimeOnly'];
@@ -8,12 +10,22 @@ export default class FilterForm extends HTMLElement {
         this.attachShadow({mode: 'open'});
     }
 
+    attributeChangedCallback(attrName, oldValue, newValue) {
+        if (oldValue !== newValue) {
+            this[attrName] = this.getAttribute(attrName);
+        }
+    }
+
     connectedCallback() {
         this.render();
     }
 
     render() {
         this.html();
+        this.css();
+    }
+
+    css() {
         this.defaultCSS();
         this.tabletLayoutCSS();
         this.mobileLayoutCSS();
@@ -44,6 +56,7 @@ export default class FilterForm extends HTMLElement {
                     </span>
                 </span>
             </div>
+            <filter-form-modal open="false"></filter-form-modal>
         `;
     }
 
@@ -178,7 +191,6 @@ export default class FilterForm extends HTMLElement {
                     font-size: clamp(8px, 2vw, var(--font-size-1));
                     font-weight: bold;
                     margin-right: clamp(13px, 2vw, 26px);
-
                 }
 
                 .iconInputGroup:nth-child(3) button {

@@ -18,19 +18,47 @@ class GithubJobsApp extends HTMLElement {
 
     html() {
         this.shadowRoot.innerHTML += `
-            <app-header></app-header>
-            <filter-form></filter-form>
+            <div id="appInnerContainer">
+                <app-header></app-header>
+                <filter-form></filter-form>
+            </div>
         `;
     }
-    
+
     css() {
         this.shadowRoot.innerHTML += `
-            <style>
-                :host {
-                    display: block;
-                    width: 100%;
+        <style>
+            :host {
+                display: block;
+                width: 100%;
+            }
+
+            #appInnerContainer {
+                background-image: url('../src/assets/icons/desktop/bg-pattern-header.svg');
+                background-repeat: no-repeat;    
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: clamp(33px, 12vw, 165px);
+                padding-right: clamp(33px, 12vw, 165px);
+                OUTLINE: 2PX SOLID gold;
+            }
+                
+            @media screen and (max-width: 768px) {
+                #appInnerContainer {
+                    background-image: url('../src/assets/icons/tablet/bg-pattern-header.svg');
+                    padding-left: clamp(7.8px, 6vw, 39px);
+                    padding-right: clamp(8px, 6vw, 40px);
                 }
-            </style>
+            }
+                
+            @media screen and (max-width: 375px) {
+                #appInnerContainer {
+                    background-image: url('../src/assets/icons/mobile/bg-pattern-header.svg');
+                    padding-left: clamp(4.8px, 7vw, 24px);
+                    padding-right: clamp(4.8px, 7vw, 24px);
+                }
+            }
+        </style>
         `;
     }
 }

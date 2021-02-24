@@ -47,7 +47,7 @@ body {
     min-height: 100%;
 }
 
-#app-wrapper {
+/* github-jobs-app {
     background-image: url('../assets/icons/desktop/bg-pattern-header.svg');
     background-repeat: no-repeat;    
     margin-left: auto;
@@ -59,7 +59,7 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-    #app-wrapper {
+    github-jobs-app {
         background-image: url('../assets/icons/tablet/bg-pattern-header.svg');
         padding-left: clamp(7.8px, 6vw, 39px);
         padding-right: clamp(8px, 6vw, 40px);
@@ -67,9 +67,9 @@ body {
 }
 
 @media screen and (max-width: 375px) {
-    #app-wrapper {
+    github-jobs-app {
         background-image: url('../assets/icons/mobile/bg-pattern-header.svg');
         padding-left: clamp(4.8px, 7vw, 24px);
         padding-right: clamp(4.8px, 7vw, 24px);
     }
-}
+} */
