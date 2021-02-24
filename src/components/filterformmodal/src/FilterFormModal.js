@@ -27,13 +27,15 @@ export default class FilterFormModal extends HTMLElement {
         this.shadowRoot.innerHTML += `
                 <div id="filterModal">
                     <span class="iconInputGroup">
-                        <img src="../src/assets/icons/desktop/icon-location.svg">
-                        <input type="text" placeholder="Filter by location…">
+                        <span>
+                            <img src="../src/assets/icons/desktop/icon-location.svg">
+                            <input type="text" placeholder="Filter by location…">
+                        </span>
                     </span>
                     <span class="iconInputGroup">
                         <span>
                             <input type="checkbox" id="fullTimeOnlyOption">
-                            <label for="fullTimeOnlyOption">Full Time <span id="only">Only</span></label>
+                            <label for="fullTimeOnlyOption">Full Time Only</label>
                             <button type="button">Search</button>
                         </span>
                     </span>
@@ -48,8 +50,11 @@ export default class FilterFormModal extends HTMLElement {
     defaultLayoutCSS() {
         this.shadowRoot.innerHTML += `
             <style>
+
+                *, *::before, *::after { padding: 0; margin: 0; }
+
                 :host {
-                    Xdisplay: none;
+                    display: none;
                     background-color: var(--overlay-color);
                     height: 100vh;
                     position: fixed;
@@ -59,28 +64,75 @@ export default class FilterFormModal extends HTMLElement {
                     top: 0;
                     width: 100vw;
                     z-index: 999;
+                    animation-name: overlayLoadIn;
+                    animation-iteration-count: 1;
+                    animation-duration: 0.4s;
+                }
+
+                @keyframes overlayLoadIn {
+                    :host {
+                        0% {
+                            transform: scale(0);
+                        }
+
+                        100% {
+                            transform: scale(1);
+                        }
+                    }
                 }
 
                 #filterModal {
                     background-color: var(--white);
+                    border-radius: 6px;
                     display: flex;
                     flex-direction: column;
-                    padding-left: 24px;
-                    padding-right: 24px;
                     position: relative;
                     margin-left: auto;
                     margin-right: auto;
-                    top: 225px;
-                    height: 217px;
-                    width: 87.2%;
                     max-width: 327px;
+                    top: 225px;
+                    animation-name: modalLoadIn;
+                    animation-iteration-count: 1;
+                    animation-duration: 0.8s;
                 }
 
-                .iconInputGroup {OUTLINE: 1PX SOLID RED;}
+                @keyframes overlayLoadIn {
+                    :host {
+                        0%, 50% {
+                            transform: translateX(-200px);
+                        }
 
-                .iconInputGroup input {
+                        100% {
+                            transform: translateX(0px);
+                        }
+                    }
+                }
+
+                .iconInputGroup {
+                    padding-left: 24px;
+                    padding-right: 24px;
+                }
+
+                .iconInputGroup:nth-child(1) {
+                    border-bottom: 1px solid var(--opaque-dark-grey);
+                    padding-bottom: 20px;
+                }
+
+                .iconInputGroup:nth-child(1) span {
+                    display: flex;
+                    flex-direction: row;
+                    height: 24px;
+                }
+
+                .iconInputGroup:nth-child(1) span img {
+                    height: 24px;
+                    width: 17px;
+                }
+
+                .iconInputGroup:nth-child(1) input {
                     border: none;
-                    font-size: clamp(8px, 1vw, var(--font-size-1));
+                    font-size: var(--font-size-1);
+                    padding-top: 12px;
                 }
 
                 .iconInputGroup span {
@@ -88,8 +140,26 @@ export default class FilterFormModal extends HTMLElement {
                     flex-direction: column;
                 }
 
+                .iconInputGroup:nth-child(1) img {
+                    margin-right: 17px;
+                }
+
+                .iconInputGroup:nth-child(1) input {
+                    background: none;
+                }
+
+                .iconInputGroup:nth-child(1) input:focus {
+                    outline: none;
+                }
+
                 .iconInputGroup:nth-child(1) {
-                    background-color: lightpink;
+                    padding-bottom: 20px;
+                    padding-top: 24px;
+                }
+
+                .iconInputGroup:nth-child(2) {
+                    padding-bottom: 24px;
+                    padding-top: 24px;
                 }
 
                 .iconInputGroup:nth-child(2) input {
@@ -97,8 +167,10 @@ export default class FilterFormModal extends HTMLElement {
                 }
 
                 .iconInputGroup:nth-child(2) label {
+                    align-items: center;
                     display: flex;
-                    BACKGROUND-COLOR: LIGHTBLUE;
+                    font-weight: bold;
+                    margin-bottom: 24px;
                 }
 
                 .iconInputGroup:nth-child(2) label::before {
@@ -107,6 +179,7 @@ export default class FilterFormModal extends HTMLElement {
                     cursor: pointer;
                     display: block;
                     position: relative;
+                    margin-right: 16px;
                     left: 0px;
                     Xtop: 10px;
                     width: 24px;
@@ -119,6 +192,18 @@ export default class FilterFormModal extends HTMLElement {
                     background-image: url('../src/assets/icons/desktop/icon-check.svg');
                     background-repeat: no-repeat;
                     background-position: center;
+                }
+
+                .iconInputGroup:nth-child(2) button {
+                    background-color: var(--blue-1);
+                    border: none;
+                    border-radius: 5px;
+                    color: var(--white);
+                    cursor: pointer;
+                    font-size: var(--font-size-1);
+                    font-weight: bold;
+                    padding-bottom: 16px;
+                    padding-top: 16px;
                 }
             </style>`;
     }
