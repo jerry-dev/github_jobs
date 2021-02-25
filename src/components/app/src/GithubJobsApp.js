@@ -18,9 +18,11 @@ class GithubJobsApp extends HTMLElement {
 
     html() {
         this.shadowRoot.innerHTML += `
-            <div id="appInnerContainer">
-                <app-header></app-header>
-                <filter-form></filter-form>
+            <div id="appOuterContainer">
+                <div id="appInnerContainer">
+                    <app-header></app-header>
+                    <filter-form></filter-form>
+                </div>
             </div>
         `;
     }
@@ -30,17 +32,20 @@ class GithubJobsApp extends HTMLElement {
         <style>
             :host {
                 display: block;
-                width: 100%;
+            }
+
+            #appOuterContainer {
+                margin-left: auto;
+                margin-right: auto;
+                max-width: 1440px;
             }
 
             #appInnerContainer {
                 background-image: url('../src/assets/icons/desktop/bg-pattern-header.svg');
                 background-repeat: no-repeat;    
-                margin-left: auto;
-                margin-right: auto;
                 padding-left: clamp(33px, 12vw, 165px);
                 padding-right: clamp(33px, 12vw, 165px);
-                OUTLINE: 2PX SOLID gold;
+                OUTLINE: 2PX SOLID GOLD;
             }
                 
             @media screen and (max-width: 768px) {

@@ -27,6 +27,7 @@ export default class FilterForm extends HTMLElement {
 
     css() {
         this.defaultCSS();
+        this.betweenDesktopAndTabletCSS();
         this.tabletLayoutCSS();
         this.mobileLayoutCSS();
     }
@@ -45,13 +46,15 @@ export default class FilterForm extends HTMLElement {
                     </span>
                 </span>
                 <span class="iconInputGroup">
-                    <img src="../src/assets/icons/desktop/icon-location.svg">
-                    <input type="text" placeholder="Filter by location…">
+                    <span>
+                        <img src="../src/assets/icons/desktop/icon-location.svg">
+                        <input type="text" placeholder="Filter by location…">
+                    </span>
                 </span>
                 <span class="iconInputGroup">
                     <span>
                         <input type="checkbox" id="fullTimeOnlyOption">
-                        <label for="fullTimeOnlyOption">Full Time <span id="only">Only</span></label>
+                        <label for="fullTimeOnlyOption">Full Time <span id="only">&nbsp;Only</span></label>
                         <button type="button">Search</button>
                     </span>
                 </span>
@@ -67,7 +70,6 @@ export default class FilterForm extends HTMLElement {
 
                 :host {
                     display: block;
-                    width: 100%;
                 }
 
                 .mobileIcons {
@@ -77,7 +79,7 @@ export default class FilterForm extends HTMLElement {
                 #filterFormInnerContainer {
                     align-items: center;
                     display: flex;
-                    max-height: 100%;
+                    max-width: 100%;
                 }
 
                 .iconInputGroup {
@@ -88,11 +90,6 @@ export default class FilterForm extends HTMLElement {
                     justify-content: left;
                     padding-bottom: 28px;
                     padding-top: 28px;                    
-                }
-
-                .iconInputGroup:nth-child(1) {
-                    max-height: 24px;
-                    width: 100%;
                 }
 
                 .iconInputGroup input {
@@ -122,9 +119,9 @@ export default class FilterForm extends HTMLElement {
                 }
 
                 .iconInputGroup:nth-child(1) {
-                    border-radius: 6px 0 6px 0;
-                    padding-left: clamp(6.4px, 2.88%, 32px);
-                    padding-right: clamp(23.8px, 10.720%, 119px);
+                    border-radius: 6px 0px 0px 6px;
+                    max-height: 24px;
+                    width: 41.711%;
                 }
 
                 .iconInputGroup:nth-child(1) input {
@@ -134,48 +131,65 @@ export default class FilterForm extends HTMLElement {
                 .iconInputGroup:nth-child(1) span {
                     align-items: center;
                     display: flex;
-                    justify-content: space-between;
+                    justify-content: left;
+                    width: 67.386%;
+                    margin-left: 6.911%;
+                    margin-right: auto;
                     max-height: 24px;
-                    width: 100%;
                 }
 
                 .iconInputGroup:nth-child(2) {
-                    padding-left: clamp(4.6px, 2vw, 23px);
-                    padding-right: clamp(21.6px, 8vw, 108px);
+                    padding-bottom: 28px;
+                    padding-top: 28px;
+                    width: 27.027%;
+                }
+
+                .iconInputGroup:nth-child(2) span {
+                    display: flex;
+                    margin-left: 7.666%;
+                    max-height: 24px;
+                    width: 56.333%;
                 }
 
                 .iconInputGroup:nth-child(2) input {
+                    padding-top: 6px;
                     width: clamp(27px, 15vw, 135px);
                 }
 
                 .iconInputGroup:nth-child(3) {
-                    border-radius: 0 6px 0 6px;
-                    padding-left: clamp(6.4px, 3vw, 32px);
-                    padding-right: clamp(3.2px, 1vw, 16px);
+                    border-radius: 0px 6px 6px 0px;
+                    display: flex;
+                    justify-content: flex-start;
+                    XXXpadding-left: clamp(14.4px, 5vw, 32px);
+                    XXXpadding-right: clamp(3.2px, 1vw, 16px);
+                    width: 31.081%;
                     position: relative;
-                    width: 100%;
                 }
 
                 .iconInputGroup:nth-child(3) span {
                     align-items: center;
                     display: flex;
                     justify-content: space-between;
+                    margin-right: auto;
+                    margin-left: auto;
                     max-height: 24px;
-                    width: 100%;
+                    width: 86.086%;
                 }
                 
                 .iconInputGroup:nth-child(3) input {
-                    visibility: hidden;
+                    display: none;
                 }
 
                 .iconInputGroup:nth-child(3) label::before {
                     border-radius: 3px;
                     content: "";
                     cursor: pointer;
-                    position: absolute;
-                    left: 9%;
-                    top: 28px;
-                    width: 24px;
+                    display: block;
+                    position: relative;
+                    margin-right: clamp(8px, 2vw, 16px);
+                    left: 0px;
+                    top: -4px;
+                    min-width: 24px;
                     height: 24px;
                     background-color: var(--opaque-very-dark-blue-1);
                 }
@@ -190,7 +204,11 @@ export default class FilterForm extends HTMLElement {
                 .iconInputGroup:nth-child(3) label {
                     font-size: clamp(8px, 2vw, var(--font-size-1));
                     font-weight: bold;
-                    margin-right: clamp(13px, 2vw, 26px);
+                    display: flex;
+                    Xmargin-right: clamp(13px, 2vw, 26px);
+                    max-height: 16px;
+                    white-space: nowrap;
+                    margin-right: clamp(8px, 2vw, 16px);
                 }
 
                 .iconInputGroup:nth-child(3) button {
@@ -204,11 +222,21 @@ export default class FilterForm extends HTMLElement {
                     font-weight: bold;
                     padding-bottom: 16px;
                     padding-top: 16px;
-                    padding-left: clamp(7px, 3vw, 35.5px);
-                    padding-right: clamp(7px, 3vw, 35.5px);
+                    width: 41.414%;
                 }
             </style>
         `;
+    }
+
+    betweenDesktopAndTabletCSS() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                @media screen and (max-width: 1076px) {
+                    #only {
+                        display: none;
+                    }
+                }
+            </style>`
     }
 
     tabletLayoutCSS() {
@@ -252,10 +280,6 @@ export default class FilterForm extends HTMLElement {
                     .iconInputGroup:nth-child(3) button {
                         padding-left: clamp(2.8px, 2vw, 14px);
                         padding-right: clamp(2.8px, 2vw, 14px);
-                    }
-
-                    #only {
-                        display: none;
                     }
                 }
             </style>
