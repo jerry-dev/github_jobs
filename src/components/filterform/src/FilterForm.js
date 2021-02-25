@@ -23,6 +23,7 @@ export default class FilterForm extends HTMLElement {
     render() {
         this.html();
         this.css();
+        this.scripts();
     }
 
     css() {
@@ -355,6 +356,55 @@ export default class FilterForm extends HTMLElement {
                 }
             </style>
         `;
+    }
+
+    scripts() {
+        this.filterModalOpenEvent();
+    }
+
+    openFilterModal() {
+        const filterFormModal = this.shadowRoot.querySelector('filter-form-modal');
+        const open = filterFormModal.getAttribute('open');
+
+        switch (open) {
+            case 'false':
+            case false: 
+                filterFormModal.setAttribute('open', "true");
+                this.closeFilterModalEvent();
+            break;
+        }
+    }
+
+    filterModalOpenEvent() {
+        this.shadowRoot.addEventListener('click', (event) => {
+            const { id } = event.target;
+            
+            switch (id) {
+                case 'filterIcon': this.openFilterModal();
+                break;
+            }
+        });
+    }
+
+    closeFilterModalEvent() {
+        const filterFormModal = this.shadowRoot.querySelector('filter-form-modal');
+
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                filterFormModal.setAttribute('open', "false");
+            }
+        });
+
+        // TEST LATER, WHEN THERE'S CONTENT TO SCROLL
+        window.addEventListener('scroll', () => {
+            filterFormModal.setAttribute('open', "false");
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.outerWidth > 375) {
+                filterFormModal.setAttribute('open', "false");
+            }
+        });
     }
 }
 

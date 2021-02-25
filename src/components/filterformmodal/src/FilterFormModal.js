@@ -69,6 +69,10 @@ export default class FilterFormModal extends HTMLElement {
                     animation-duration: 0.4s;
                 }
 
+                :host([open="true"]) {
+                    display: block;
+                }
+
                 @keyframes overlayLoadIn {
                     :host {
                         0% {
