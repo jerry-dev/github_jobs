@@ -125,6 +125,9 @@ export default class FilterForm extends HTMLElement {
                 }
 
                 .iconInputGroup:nth-child(1) input {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
                     width: clamp(54.2px, 19vw, 271px);
                 }
 
@@ -153,6 +156,9 @@ export default class FilterForm extends HTMLElement {
 
                 .iconInputGroup:nth-child(2) input {
                     padding-top: 6px;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
                     width: clamp(27px, 15vw, 135px);
                 }
 
@@ -247,39 +253,47 @@ export default class FilterForm extends HTMLElement {
                         font-size: clamp(8px, 2vw, var(--font-size-1));
                     }
 
+                    .iconInputGroup:nth-child(1) {
+                        width: 32.220%;
+                    }
+
+                    .iconInputGroup:nth-child(1) span {
+                        width: 66.216%;
+                    }
+
+                    .iconInputGroup:nth-child(1) input {
+                        width: 69%;
+                    }
+
+                    .iconInputGroup:nth-child(2) {
+                        width: 30.914%;
+                    }
+
+                    .iconInputGroup:nth-child(2) span {
+                        width: 79.342%;
+                    }
+
+                    .iconInputGroup:nth-child(2) input {
+                        width: 63.380%;
+                    }
+
+                    .iconInputGroup:nth-child(3) {
+                        width: 36.574%;
+                    }
+
+                    .iconInputGroup:nth-child(3) span {
+                        width: 85.714%;
+                    }
+
+                    .iconInputGroup:nth-child(3) button {
+                        width: 37.037%;
+                    }
+
                     .iconInputGroup:nth-child(1) img,
                     .iconInputGroup:nth-child(2) img,
                     .iconInputGroup:nth-child(3) input  {
                         margin-right: 16px;
                         margin-right: clamp(8px, 2vw, 16px);
-                    }
-
-                    .iconInputGroup:nth-child(1) {
-                        padding-left: clamp(4.8px, 3vw, 24px);
-                        padding-right: clamp(10.2px, 7vw, 51px);
-                    }
-
-                    .iconInputGroup:nth-child(1) input {
-                        width: clamp(21px, 14vw, 105px);
-                    }
-
-                    .iconInputGroup:nth-child(2) {
-                        padding-left: clamp(4.8px, 3vw, 24px);
-                        padding-right: clamp(4.2px, 3vw, 21px);
-                    }
-    
-                    .iconInputGroup:nth-child(2) input {
-                        width: clamp(27px, 18vw, 135px);
-                    }
-
-                    .iconInputGroup:nth-child(3) {
-                        padding-left: clamp(4px, 3vw, 20px);
-                        padding-right: clamp(3.2px, 2vw, 16px);
-                    }
-
-                    .iconInputGroup:nth-child(3) button {
-                        padding-left: clamp(2.8px, 2vw, 14px);
-                        padding-right: clamp(2.8px, 2vw, 14px);
                     }
                 }
             </style>
@@ -290,24 +304,6 @@ export default class FilterForm extends HTMLElement {
         this.shadowRoot.innerHTML += `
             <style>
                 @media screen and (max-width: 375px) {
-                    .iconInputGroup {
-                        border-radius: 6px 6px 6px 6px;
-                        display: flex;
-                        justify-content: space-between;
-                        padding-bottom: 34px;
-                        padding-top: 34px;
-                        width: 100%;
-                    }
-
-                    .iconInputGroup:nth-child(1) {
-                        padding-left: 24px;
-                        padding-right: 16px;
-                    }
-
-                    .iconInputGroup:nth-child(1) span {
-                        max-height: 16px;
-                    }
-
                     #searchIcon1 {
                         display: none;
                     }
@@ -316,30 +312,40 @@ export default class FilterForm extends HTMLElement {
                         display: block;
                     }
 
-                    .iconInputGroup input {
-                        font-size: clamp(8px, 5vw, var(--font-size-1));
+                    .iconInputGroup:nth-child(1) {
+                        border-radius: 6px 6px 6px 6px;
+                        width: 100%;
                     }
 
-                    #filterIcon {
+                    .iconInputGroup:nth-child(1) span {
+                        width: 87.155%;
+                    }
+
+                    .iconInputGroup:nth-child(1) input {
+                        width: 36.585%;
+                        font-size: clamp(8px, 5vw, var(--font-size-1));
+                        margin-right: auto;
+                        
+                    }
+
+                    .iconInputGroup:nth-child(1) #filterIcon {
                         margin-left: auto;
                         margin-right: 24.03px;
                     }
 
-                    .iconInputGroup:nth-child(1) input {
-                        border: none;
-                        width: clamp(21px, 28vw, 105px);
-                    }
-
                     .iconInputGroup:nth-child(1) button {
                         background-color: var(--blue-1);
-                        border: none;
                         border-radius: 5px;
-                        padding-bottom: 14px;
-                        padding-top: 14px;
-                        padding-left: 14px;
-                        padding-right: 14px;
-                        max-height: 48px;
-                        max-width: 48px;
+                        margin-left: auto;
+                        border: none;
+                        height: 48px;
+                        width: 16.842%;
+                        margin-left: 0px;
+                    }
+
+                    .iconInputGroup:nth-child(1) button img {
+                        margin-left: auto;
+                        margin-right: auto;
                     }
 
                     .iconInputGroup:nth-child(2),

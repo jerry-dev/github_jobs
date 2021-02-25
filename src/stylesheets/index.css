@@ -46,30 +46,3 @@ body {
     line-height: var(--line-height-1);
     min-height: 100%;
 }
-
-/* github-jobs-app {
-    background-image: url('../assets/icons/desktop/bg-pattern-header.svg');
-    background-repeat: no-repeat;    
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1440px;
-    padding-left: clamp(33px, 12vw, 165px);
-    padding-right: clamp(33px, 12vw, 165px);
-    OUTLINE: 2PX SOLID gold;
-}
-
-@media screen and (max-width: 768px) {
-    github-jobs-app {
-        background-image: url('../assets/icons/tablet/bg-pattern-header.svg');
-        padding-left: clamp(7.8px, 6vw, 39px);
-        padding-right: clamp(8px, 6vw, 40px);
-    }
-}
-
-@media screen and (max-width: 375px) {
-    github-jobs-app {
-        background-image: url('../assets/icons/mobile/bg-pattern-header.svg');
-        padding-left: clamp(4.8px, 7vw, 24px);
-        padding-right: clamp(4.8px, 7vw, 24px);
-    }
-} */
