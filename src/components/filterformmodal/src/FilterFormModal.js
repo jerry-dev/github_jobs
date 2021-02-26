@@ -1,6 +1,6 @@
 export default class FilterFormModal extends HTMLElement {
     static get observedAttributes() {
-        return ['open'];
+        return ['open, location, fullTimeOnly'];
     }
 
     constructor() {
@@ -21,6 +21,7 @@ export default class FilterFormModal extends HTMLElement {
     render() {
         this.html();
         this.css();
+        this.scripts();
     }
 
     html() {
@@ -210,6 +211,33 @@ export default class FilterFormModal extends HTMLElement {
                     padding-top: 16px;
                 }
             </style>`;
+    }
+
+    scripts() {
+        this.FormSubmitEvent();
+    }
+
+    formValuesToComponentAttributes() {
+        const location = this.shadowRoot.querySelector('#filterModal > .iconInputGroup > span > input').value;
+        const fullTimeOnly = this.shadowRoot.querySelectorAll('#filterModal > .iconInputGroup')[1].querySelector('span > input').checked;
+        this.setAttribute('location', location);
+        this.setAttribute('fullTimeOnly', fullTimeOnly);
+    }
+
+    closeSelf() {
+        this.setAttribute("open", "false");
+    }
+
+    FormSubmitEvent() {
+        this.shadowRoot.addEventListener('click', (event) => {
+            const { tagName } = event.target;
+
+            switch (tagName) {
+                case 'BUTTON':
+                    this.formValuesToComponentAttributes();
+                    this.closeSelf();
+            }
+        });
     }
 }
 

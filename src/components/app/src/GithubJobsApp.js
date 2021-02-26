@@ -1,14 +1,18 @@
 import AppHeader from '../../appheader/src/AppHeader.js';
 import FilterForm from '../../filterform/src/FilterForm.js';
+import GithubJobsListings from '../../githubjobslistings/src/GithubJobsListings.js';
+import Navigo from '../../../utils/navigo.es.js';
 
 class GithubJobsApp extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.dataAvailable = false;
     }
 
     connectedCallback() {
         this.render();
+        this.routerInit();
     }
 
     render() {
@@ -22,6 +26,12 @@ class GithubJobsApp extends HTMLElement {
                 <div id="appInnerContainer">
                     <app-header></app-header>
                     <filter-form></filter-form>
+                    <div id="route">
+                        <github-jobs-listings
+                            listingsPreviewsPerPage=12
+                            apiKey='https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json'
+                        ></github-jobs-listings>
+                    </div>
                 </div>
             </div>
         `;
@@ -65,6 +75,31 @@ class GithubJobsApp extends HTMLElement {
             }
         </style>
         `;
+    }
+
+    routerInit() {
+        const route = this.shadowRoot.querySelector('#route');
+
+        const router = new Navigo(window.location.origin);
+
+        router
+            .on({
+                "/listings": () => route.innerHTML = `<github-jobs-listings
+                    listingsPreviewsPerPage=12
+                    apiKey='https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json'
+                ></github-jobs-listings>`,
+                "/selectedListing": () => route.innerHTML = `<dev-job-listing></dev-job-listing>`
+            });
+    }
+
+    fetchData() {
+        fetch(this.getAttribute('apiKey'))
+            .then((response) => response.json())
+            .then((data) => this.fetchedData = data)
+            .then(() => this.dataAvailable = true)
+            .then(() => this.html())
+            .catch((error) => console.log(error)
+        );
     }
 }
 

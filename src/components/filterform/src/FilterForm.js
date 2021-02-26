@@ -60,7 +60,7 @@ export default class FilterForm extends HTMLElement {
                     </span>
                 </span>
             </div>
-            <filter-form-modal open="false"></filter-form-modal>
+            <filter-form-modal open="false" location fullTimeOnly="false"></filter-form-modal>
         `;
     }
 
@@ -378,7 +378,7 @@ export default class FilterForm extends HTMLElement {
     filterModalOpenEvent() {
         this.shadowRoot.addEventListener('click', (event) => {
             const { id } = event.target;
-            
+
             switch (id) {
                 case 'filterIcon': this.openFilterModal();
                 break;
