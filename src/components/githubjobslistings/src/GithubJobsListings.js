@@ -1,28 +1,48 @@
 export default class GithubJobsListings extends HTMLElement {
     static get observedAttributes() {
-        return ['listingsPreviewsPerPage, apiKey'];
+        return ['listingsPreviewsPerPage'];
     }
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.name = 'github-jobs-listings';
+        this.interests = ['listingDataAvailable'];
     }
 
+    
+
     connectedCallback() {
-        this.render();
+    }
+
+    getName() {
+        return this.name;
+    }
+
+    getInterests() {
+        return this.interests;
+    }
+
+    addInterests(newInterest) {
+        this.interests[this.interests.length] = newInterest;
+    }
+
+    notificationReceiver(name, interest, newValue) {
+        console.log(`${this.getName()} has received the notification.`);
+        console.log(`The data received:`, {name, interest, newValue});
+
+        if (interest === 'listingDataAvailable') {
+            switch (newValue) {
+                case 'true':
+                case true:
+                    this.render();
+                    break;
+            }
+        }
     }
 
     render() {
-        const dataAvailable = this.dataAvailable;
-
-        switch (dataAvailable) {
-            case 'false':
-            case false:
-                this.fetchData();
-            case 'true':
-            case true:
-                this.html();
-        }
+        this.html();
     }
 
     html() {

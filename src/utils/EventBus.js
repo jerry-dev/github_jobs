@@ -39,7 +39,7 @@ class EventBus {
                 const index = this.callbackIndex[event][i].position;
                 this.subscribers[event].splice(index, 1);
 
-                for (let j = i+1; j < this.callbackIndex[event].length; ++1) {
+                for (let j = i+1; j < this.callbackIndex[event].length; ++i) {
                     this.callbackIndex[event][j].position--;
                 }
 

@@ -1,18 +1,30 @@
 import AppHeader from '../../appheader/src/AppHeader.js';
 import FilterForm from '../../filterform/src/FilterForm.js';
 import GithubJobsListings from '../../githubjobslistings/src/GithubJobsListings.js';
+import eventBus from '../../../utils/EventBus.js';
 import Navigo from '../../../utils/navigo.es.js';
 
 class GithubJobsApp extends HTMLElement {
+    static get observedAttributes() {
+        return ['apiURL'];
+    }
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-        this.dataAvailable = false;
+        this.event = '';
+        this.listingData = [];
+        this.observer = eventBus;
+
     }
 
     connectedCallback() {
+        const options = {
+            seconds: 15 * 60,
+        }
+        this.cachedFetch(this.getAttribute('apiURL'), options);
         this.render();
         this.routerInit();
+        this.subscriberRegistration();
     }
 
     render() {
@@ -29,7 +41,6 @@ class GithubJobsApp extends HTMLElement {
                     <div id="route">
                         <github-jobs-listings
                             listingsPreviewsPerPage=12
-                            apiKey='https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json'
                         ></github-jobs-listings>
                     </div>
                 </div>
@@ -86,20 +97,78 @@ class GithubJobsApp extends HTMLElement {
             .on({
                 "/listings": () => route.innerHTML = `<github-jobs-listings
                     listingsPreviewsPerPage=12
-                    apiKey='https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json'
                 ></github-jobs-listings>`,
                 "/selectedListing": () => route.innerHTML = `<dev-job-listing></dev-job-listing>`
             });
     }
 
-    fetchData() {
-        fetch(this.getAttribute('apiKey'))
-            .then((response) => response.json())
-            .then((data) => this.fetchedData = data)
-            .then(() => this.dataAvailable = true)
-            .then(() => this.html())
-            .catch((error) => console.log(error)
-        );
+    cachedFetch(url, options) {
+        let expiration = 15 * 60;
+
+        switch (options) {
+            case 'number':
+                expiration = options;
+                options = undefined;
+                break;
+            case 'object':
+                expiration = options.seconds || expiration;
+                break;
+        }
+
+        let cacheKey = url;
+        let cached = localStorage.getItem(cacheKey);
+        (!cached) 
+            ? console.log(`The data is not from the local cache`)
+            : console.log(`The data came from the local cache`);
+        let whenCached = localStorage.getItem(`${cacheKey}:timestamp`);
+        if (cached !== null && whenCached !== null) {
+            let age = (Date.now() - whenCached) / 1000;
+            if (age < expiration) {
+                let response = new Response(new Blob([cached]));
+                return Promise.resolve(response);
+            } else {
+                localStorage.removeItem(cacheKey);
+                localStorage.removeItem(`${cacheKey}:timestamp`);
+            }
+        }
+
+        fetch(url, options)
+            .then((response) => {
+                if (response.status === 200) {
+                    let contentType = response.headers.get('Content-Type');
+                    if (contentType && (contentType.match(/application\/json/i) ||
+                    contentType.match(/text\//i))) {
+                        response.clone().text().then((content) => {
+                            localStorage.setItem(cacheKey, content);
+                            localStorage.setItem(`${cacheKey}:timestamp`, Date.now());
+                            console.log(localStorage.getItem(cacheKey));
+                        });
+                    }
+                }
+                return response;
+            }
+        )
+    }
+
+    subscriberRegistration() {
+        // REGISTER THE SUBS ONE BY ONE HERE
+    }
+
+    setListingData(fetchedData) {
+        this.listingData = fetchedData;
+    }
+
+    getListingData() {
+        return this.listingData;
+    }
+
+    setEvent(newEvent) {
+        this.event = newEvent;
+        this.observer.publish(this.getEvent(), this.getListingData());
+    }
+
+    getEvent() {
+        return this.event;
     }
 }
 
