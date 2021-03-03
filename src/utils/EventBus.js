@@ -14,7 +14,7 @@ class EventBus {
         }
 
         if (!Array.isArray(this.callbackIndex[event])) {
-            this.subscribers[event] = [];
+            this.callbackIndex[event] = [];
         }
 
         const index = this.subscribers[event].push(callback) - 1;
@@ -48,7 +48,7 @@ class EventBus {
         }
     }
 
-    publish(event, newValue) {
+    publish(event, newValue = 'n/a') {
         if (!this.subscribers[event]) {
             return;
         }
