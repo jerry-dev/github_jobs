@@ -45,6 +45,10 @@ export default class GithubJobsListings extends HTMLElement {
         const numberOfListings = this.getAttribute('listingsPreviewsPerPage');
 
         for (let i in theData) {
+            if (i === numberOfListings) {
+                break;
+            }
+            
             markup += `<github-job-listing-preview
                 id=${theData[i].id}
                 employmentType=${theData[i].type}
@@ -59,9 +63,7 @@ export default class GithubJobsListings extends HTMLElement {
                 companyLogo=${theData[i].company_logo}>
             </github-job-listing-preview>`;
             
-            if (i === numberOfListings) {
-                break;
-            }
+            
         }
 
         this.shadowRoot.innerHTML += `
