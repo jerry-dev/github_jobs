@@ -1,5 +1,4 @@
 import AppHeader from '../../appheader/src/AppHeader.js';
-import FilterForm from '../../filterform/src/FilterForm.js';
 import GithubJobsListings from '../../githubjobslistings/src/GithubJobsListings.js';
 import eventBus from '../../../utils/EventBus.js';
 import Navigo from '../../../utils/navigo.es.js';
@@ -31,11 +30,9 @@ class GithubJobsApp extends HTMLElement {
             <div id="appOuterContainer">
                 <div id="appInnerContainer">
                     <app-header></app-header>
-                    <filter-form></filter-form>
                     <div id="route">
-                        <github-jobs-listings
-                            listingsPreviewsPerPage=12
-                        ></github-jobs-listings>
+                        <github-jobs-listings listingsPreviewsPerPage=12>
+                        </github-jobs-listings>
                     </div>
                 </div>
             </div>

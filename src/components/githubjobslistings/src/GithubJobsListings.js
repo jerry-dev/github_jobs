@@ -1,3 +1,4 @@
+import FilterForm from '../../filterform/src/FilterForm.js';
 import GithubJobListingPreview from '../../githubjoblistingpreview/src/GithubJobListingPreview.js';
 import LoadMoreButton from '../../loadmorebutton/src/LoadMoreButton.js';
 
@@ -16,7 +17,6 @@ export default class GithubJobsListings extends HTMLElement {
     getName() {
         return this.name;
     }
-    // "https://jobs.github.com/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa1NiIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--54bd1a2ac1ebe3d27fb5f6f5019770aec25d5c87/last%20ned.png"
 
     getInterests() {
         return this.interests;
@@ -69,6 +69,7 @@ export default class GithubJobsListings extends HTMLElement {
         }
 
         this.shadowRoot.innerHTML += `
+            <filter-form></filter-form>
             <div id="jobListingsInnerContainer">
                 ${markup}
             </div>
@@ -78,6 +79,7 @@ export default class GithubJobsListings extends HTMLElement {
 
     css() {
         this.defaultCSS();
+        this.tabletLayoutCSS();
     }
 
     defaultCSS() {
@@ -98,9 +100,16 @@ export default class GithubJobsListings extends HTMLElement {
                     grid-column-gap: 30px;
                     grid-row-gap: 65px;
                     margin-bottom: 56px;
+                    margin-top: 105px;
                     width: 100%;
                 }
             </style>
+        `;
+    }
+
+    tabletLayoutCSS() {
+        this.shadowRoot.innerHTML += `
+
         `;
     }
 
@@ -108,9 +117,30 @@ export default class GithubJobsListings extends HTMLElement {
         this.listingClickEvent();
     }
 
+    captureDetails(event) {
+        // PASS LISTING DETAILS TO THE LISTING COMPONENT VIA EVENT BUS
+        const details = {};
+        details.companyLogo = event.target.getAttribute('companyLogo');
+        details.companyName = event.target.getAttribute('companyName');
+        details.companyURL = event.target.getAttribute('companyURL');
+        details.createdAt = event.target.getAttribute('createdAt');
+        details.employmentType = event.target.getAttribute('employmentType');
+        details.positionTitle = event.target.getAttribute('positionTitle');
+        details.jobDescription = event.target.getAttribute('jobDescription');
+        details.howToApply = event.target.getAttribute('howToApply');
+        console.log(details)
+    }
+
     listingClickEvent() {
         this.shadowRoot.querySelector('#jobListingsInnerContainer').addEventListener('click', (event) => {
-            console.log(event.target.id);
+            event.preventDefault();
+            const { tagName } = event.target;
+
+            switch (tagName) {
+                case 'GITHUB-JOB-LISTING-PREVIEW':
+                    this.captureDetails(event);
+                    break;
+            }
         });
     }
 }

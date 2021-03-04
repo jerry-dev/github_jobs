@@ -26,12 +26,12 @@ export default class GithubJobListingPreview extends HTMLElement {
     html() {
         this.shadowRoot.innerHTML += `
             <div class="listingPreviewInnerContainer">
-                <img rel="icon" src=${this.getAttribute('companyLogo')}>
+                ${this.logoManager()}
                 <span class="metaDataContainer">
                     <small class="metaData">${this.createdAt()} .</small>
                     <small class="metaData">${this.getAttribute('employmentType')}</small>
                 </span>
-                <a href=""><h3 class="positionTitle">${this.getAttribute('positionTitle')}</h3></a>
+                <h3 class="positionTitle">${this.getAttribute('positionTitle')}</h3>
                 <span class="metaData">${this.getAttribute('companyName')}</span>
                 <h4 class="location">${this.getAttribute('jobLocation')}</h4>
             </div>
@@ -46,10 +46,6 @@ export default class GithubJobListingPreview extends HTMLElement {
         this.shadowRoot.innerHTML += `
             <style>
                 *, *::before, *::after { margin: 0; padding: 0; }
-
-                a {
-                    text-decoration: none;
-                }
 
                 :host {
                     background-color: var(--white);
@@ -84,10 +80,15 @@ export default class GithubJobListingPreview extends HTMLElement {
 
                 .positionTitle {
                     color: var(--very-dark-blue);
+                    cursor: pointer;
                     font-size: var(--h3-size: 20px);
                     line-height: var(--h3-height);
                     margin-bottom: 17px;
                     margin-top: 16px;
+                }
+
+                .positionTitle:hover {
+                    color: var(--dark-grey);
                 }
 
                 .location {
@@ -119,6 +120,14 @@ export default class GithubJobListingPreview extends HTMLElement {
             return `${weeks}w ago`;
         } else if (months >= 1) {
             return `${months}mo ago`;
+        }
+    }
+
+    logoManager() {
+        if (this.getAttribute('companyLogo') === 'null') {
+            return `<img rel="icon" src="../../src/assets/icons/desktop/dev-svgrepo-com.svg">`;
+        } else {
+            return `<img rel="icon" src=${this.getAttribute('companyLogo')}>`;
         }
     }
 }

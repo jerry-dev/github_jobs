@@ -71,7 +71,7 @@ export default class FilterForm extends HTMLElement {
 
                 :host {
                     display: block;
-                    margin-bottom: 105px;
+                    width: 100%;
                 }
 
                 .mobileIcons {
@@ -231,6 +231,10 @@ export default class FilterForm extends HTMLElement {
                     padding-bottom: 16px;
                     padding-top: 16px;
                     width: 41.414%;
+                }
+
+                .iconInputGroup:nth-child(3) button:hover {
+                    background-color: var(--light-violet);
                 }
             </style>
         `;
