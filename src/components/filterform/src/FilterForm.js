@@ -71,6 +71,7 @@ export default class FilterForm extends HTMLElement {
 
                 :host {
                     display: block;
+                    margin-bottom: 105px;
                 }
 
                 .mobileIcons {

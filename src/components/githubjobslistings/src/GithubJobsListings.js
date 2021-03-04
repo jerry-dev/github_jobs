@@ -1,4 +1,5 @@
 import GithubJobListingPreview from '../../githubjoblistingpreview/src/GithubJobListingPreview.js';
+import LoadMoreButton from '../../loadmorebutton/src/LoadMoreButton.js';
 
 export default class GithubJobsListings extends HTMLElement {
     static get observedAttributes() {
@@ -15,6 +16,7 @@ export default class GithubJobsListings extends HTMLElement {
     getName() {
         return this.name;
     }
+    // "https://jobs.github.com/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa1NiIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--54bd1a2ac1ebe3d27fb5f6f5019770aec25d5c87/last%20ned.png"
 
     getInterests() {
         return this.interests;
@@ -38,6 +40,7 @@ export default class GithubJobsListings extends HTMLElement {
     render(theData) {
         this.html(theData);
         this.css();
+        this.scripts();
     }
 
     html(theData) {
@@ -48,28 +51,28 @@ export default class GithubJobsListings extends HTMLElement {
             if (i === numberOfListings) {
                 break;
             }
-            
+
             markup += `<github-job-listing-preview
-                id=${theData[i].id}
-                employmentType=${theData[i].type}
-                listingURL=${theData[i].url}
-                createdAt=${theData[i].created_at}
-                companyName=${theData[i].company}
-                companyURL=${theData[i].company_url}
-                jobLocation=${theData[i].location}
-                positionTitle=${theData[i].title}
-                jobDescription=${theData[i].description}
-                howToApply=${theData[i].how_to_apply}
-                companyLogo=${theData[i].company_logo}>
+                companyLogo="${theData[i].company_logo}"
+                id="${theData[i].id}"
+                employmentType="${theData[i].type}"
+                listingURL="${theData[i].url}"
+                createdAt="${new Date(theData[i].created_at).getTime()}"
+                companyName="${theData[i].company}"
+                companyURL="${theData[i].company_url}"
+                jobLocation="${theData[i].location}"
+                positionTitle="${theData[i].title}"
+                jobDescription="${theData[i].description}"
+                howToApply="${theData[i].how_to_apply}"
+                >
             </github-job-listing-preview>`;
-            
-            
         }
 
         this.shadowRoot.innerHTML += `
             <div id="jobListingsInnerContainer">
                 ${markup}
             </div>
+            <load-more-button></load-more-button>
         `;
     }
 
@@ -81,18 +84,34 @@ export default class GithubJobsListings extends HTMLElement {
         this.shadowRoot.innerHTML += `
             <style>
                 *, *::before, *::after { padding: 0; margin: 0; }
+
                 :host {
-                    display: block;
+                    align-items: center;
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
                 }
 
                 #jobListingsInnerContainer {
                     display: grid;
-                    grid-template-columns: repeat(3, 31.531%);
-                    grid-auto-rows: 253px;
+                    grid-template-columns: repeat(3, 1fr);
+                    grid-column-gap: 30px;
+                    grid-row-gap: 65px;
+                    margin-bottom: 56px;
+                    width: 100%;
                 }
-
             </style>
         `;
+    }
+
+    scripts() {
+        this.listingClickEvent();
+    }
+
+    listingClickEvent() {
+        this.shadowRoot.querySelector('#jobListingsInnerContainer').addEventListener('click', (event) => {
+            console.log(event.target.id);
+        });
     }
 }
 

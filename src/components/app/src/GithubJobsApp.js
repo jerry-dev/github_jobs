@@ -126,230 +126,29 @@ class GithubJobsApp extends HTMLElement {
         if (cached !== null && whenCached !== null) {
             let age = (Date.now() - whenCached) / 1000;
             if (age < expiration) {
-                let response = new Response(new Blob([cached]));
-                return Promise.resolve(response);
+                return eval(cached);
             } else {
                 localStorage.removeItem(cacheKey);
                 localStorage.removeItem(`${cacheKey}:timestamp`);
             }
         }
 
-        const dummyData = [
-            {
-                id: "0123456",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",        
-                company_url: "www.yahoo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "7890123",
-                type: "Part Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.duckduckgo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "9638527",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.reddit.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "0123456",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",        
-                company_url: "www.yahoo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "7890123",
-                type: "Part Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.duckduckgo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "9638527",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.reddit.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "0123456",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",        
-                company_url: "www.yahoo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "7890123",
-                type: "Part Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.duckduckgo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "9638527",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.reddit.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "0123456",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",        
-                company_url: "www.yahoo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "7890123",
-                type: "Part Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.duckduckgo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "9638527",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.reddit.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "0123456",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",        
-                company_url: "www.yahoo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "7890123",
-                type: "Part Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.duckduckgo.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-            {
-                id: "9638527",
-                type: "Full Time",
-                url: "www.wikipedia.org",
-                created_at: `${Date.now()}`,
-                company: "Deez_nutz",
-                company_url: "www.reddit.com",
-                location: "Here_1",
-                title: "Rockstart_programmer",
-                description: "Work hard, get money. We pay.",
-                how_to_apply: "Smoke sign",
-                company_logo: "https://icon-library.net/images/maps-icon/maps-icon-3.jpg"
-            },
-        ];
-
-        return dummyData;
-
-        // fetch(url, options)
-        //     .then((response) => {
-        //         console.log(`response.status:`, response.status);
-        //         if (response.status === 200) {
-        //             let contentType = response.headers.get('Content-Type');
-        //             if (contentType && (contentType.match(/application\/json/i) ||
-        //             contentType.match(/text\//i))) {
-        //                 response.clone().text().then((content) => {
-        //                     localStorage.setItem(cacheKey, content);
-        //                     localStorage.setItem(`${cacheKey}:timestamp`, Date.now());
-        //                 });
-        //             }
-        //         }
-        //         return response;
-        //     }
-        // )
+        fetch(url, options)
+            .then((response) => {
+                console.log(`response.status:`, response.status);
+                if (response.status === 200) {
+                    let contentType = response.headers.get('Content-Type');
+                    if (contentType && (contentType.match(/application\/json/i) ||
+                    contentType.match(/text\//i))) {
+                        response.clone().text().then((content) => {
+                            localStorage.setItem(cacheKey, content);
+                            localStorage.setItem(`${cacheKey}:timestamp`, Date.now());
+                        });
+                    }
+                }
+                return response;
+            }
+        )
     }
 
     subscriberRegistration() {
@@ -362,11 +161,10 @@ class GithubJobsApp extends HTMLElement {
         console.log('Executing getListingData()');
         const options = {
             seconds: 60 * 60 * 12,
-            headers: {
-                'User-Agent': 'request'
-            }
+            method: "GET",
+            mode: "cors"
         }
-        const theData = this.cachedFetch(this.getAttribute('apiURL'), options);
+        let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
         this.setEvent('data-fetched', theData);
     }
 
