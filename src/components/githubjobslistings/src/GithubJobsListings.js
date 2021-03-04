@@ -80,6 +80,7 @@ export default class GithubJobsListings extends HTMLElement {
     css() {
         this.defaultCSS();
         this.tabletLayoutCSS();
+        this.mobileLayoutCSS();
     }
 
     defaultCSS() {
@@ -109,7 +110,30 @@ export default class GithubJobsListings extends HTMLElement {
 
     tabletLayoutCSS() {
         this.shadowRoot.innerHTML += `
+        <style>
+            @media screen and (max-width: 768px) {
+                #jobListingsInnerContainer {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    grid-column-gap: 11px;
+                    margin-top: 70px;
+                }
+            }
+        </style>
+        `;
+    }
 
+    mobileLayoutCSS() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                @media screen and (max-width: 375px) {
+                    #jobListingsInnerContainer {
+                        display: grid;
+                        grid-template-columns: 1fr;
+                        margin-top: 49px;
+                    }
+                }
+            </style>
         `;
     }
 
