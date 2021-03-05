@@ -1,6 +1,7 @@
 import FilterForm from '../../filterform/src/FilterForm.js';
 import GithubJobListingPreview from '../../githubjoblistingpreview/src/GithubJobListingPreview.js';
 import LoadMoreButton from '../../loadmorebutton/src/LoadMoreButton.js';
+import eventBus from '../../../utils/EventBus.js';
 
 export default class GithubJobsListings extends HTMLElement {
     static get observedAttributes() {
@@ -11,7 +12,10 @@ export default class GithubJobsListings extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'github-jobs-listings';
-        this.interests = ['data-fetched'];
+        this.interests = ['data-fetched', 'loaded-more'];
+        this.currentNumberOfBuckets = 0;
+        this.numberOfListingsShown = 0;
+        this.observer = eventBus;
     }
 
     getName() {
@@ -34,6 +38,8 @@ export default class GithubJobsListings extends HTMLElement {
             case 'data-fetched':
                 this.render(theData);
                 break;
+            case 'loaded-more':
+                this.loadMore(theData);
         }
     }
 
@@ -66,6 +72,9 @@ export default class GithubJobsListings extends HTMLElement {
                 howToApply="${theData[i].how_to_apply}"
                 >
             </github-job-listing-preview>`;
+
+            console.log(`Showing ${this.numberOfListingsShown} listings`);
+            this.numberOfListingsShown++;
         }
 
         this.shadowRoot.innerHTML += `
@@ -75,6 +84,8 @@ export default class GithubJobsListings extends HTMLElement {
             </div>
             <load-more-button></load-more-button>
         `;
+
+        this.currentNumberOfBuckets++;
     }
 
     css() {
@@ -138,11 +149,10 @@ export default class GithubJobsListings extends HTMLElement {
     }
 
     scripts() {
-        this.listingClickEvent();
+        this.clickEvents();
     }
 
     captureDetails(event) {
-        // PASS LISTING DETAILS TO THE LISTING COMPONENT VIA EVENT BUS
         const details = {};
         details.companyLogo = event.target.getAttribute('companyLogo');
         details.companyName = event.target.getAttribute('companyName');
@@ -152,11 +162,13 @@ export default class GithubJobsListings extends HTMLElement {
         details.positionTitle = event.target.getAttribute('positionTitle');
         details.jobDescription = event.target.getAttribute('jobDescription');
         details.howToApply = event.target.getAttribute('howToApply');
+
+        // PASS LISTING DETAILS TO THE LISTING COMPONENT VIA EVENT BUS
         console.log(details)
     }
 
-    listingClickEvent() {
-        this.shadowRoot.querySelector('#jobListingsInnerContainer').addEventListener('click', (event) => {
+    clickEvents() {
+        this.shadowRoot.addEventListener('click', (event) => {
             event.preventDefault();
             const { tagName } = event.target;
 
@@ -164,8 +176,61 @@ export default class GithubJobsListings extends HTMLElement {
                 case 'GITHUB-JOB-LISTING-PREVIEW':
                     this.captureDetails(event);
                     break;
+                case 'LOAD-MORE-BUTTON':
+                    this.observer.publish('load-more');
+                    break;
             }
         });
+    }
+
+    loadMore(theData) {
+        let markup = ``;
+        const numberOfListings = this.getAttribute('listingsPreviewsPerPage');
+
+        const startingAt = (this.currentNumberOfBuckets * numberOfListings);
+
+        for (let i in theData) {
+            if (this.numberOfListingsShown >= 50) {
+                console.log(`Showing ${this.numberOfListingsShown} listings`);
+                this.shadowRoot.querySelector('load-more-button').style.display = 'none';
+                break;
+            }
+
+            if (i === 0) {
+                i = startingAt;
+            }
+
+            if (i === numberOfListings) {
+                console.log(`Showing ${this.numberOfListingsShown} listings`);
+                break;
+            }
+
+            markup += `<github-job-listing-preview
+                companyLogo="${theData[i].company_logo}"
+                id="${theData[i].id}"
+                employmentType="${theData[i].type}"
+                listingURL="${theData[i].url}"
+                createdAt="${new Date(theData[i].created_at).getTime()}"
+                companyName="${theData[i].company}"
+                companyURL="${theData[i].company_url}"
+                jobLocation="${theData[i].location}"
+                positionTitle="${theData[i].title}"
+                jobDescription="${theData[i].description}"
+                howToApply="${theData[i].how_to_apply}"
+                >
+            </github-job-listing-preview>`;
+
+            this.numberOfListingsShown++;
+        }
+
+        this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
+        this.currentNumberOfBuckets++;
+    }
+
+    setEvent(newEvent, theData) {
+        console.log('Setting a new event via setEvent()');
+        this.event = newEvent;
+        this.observer.publish(this.getEvent(), theData);
     }
 }
 

@@ -49,6 +49,7 @@ export default class GithubJobListingPreview extends HTMLElement {
 
                 :host {
                     background-color: var(--white);
+                    cursor: pointer;
                     display: block;
                     width: 100%;
                 }
@@ -80,7 +81,6 @@ export default class GithubJobListingPreview extends HTMLElement {
 
                 .positionTitle {
                     color: var(--very-dark-blue);
-                    cursor: pointer;
                     font-size: var(--h3-size: 20px);
                     line-height: var(--h3-height);
                     margin-bottom: 17px;

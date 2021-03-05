@@ -10,6 +10,8 @@ class GithubJobsApp extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.name = 'github-jobs-app';
+        this.interests = ['load-more']
         this.event = '';
         this.observer = eventBus;
 
@@ -116,11 +118,15 @@ class GithubJobsApp extends HTMLElement {
 
         let cacheKey = url;
         let cached = localStorage.getItem(cacheKey);
-        (!cached) 
+        (!cached)
             ? console.log(`The data is not from the local cache`)
             : console.log(`The data came from the local cache`);
         let whenCached = localStorage.getItem(`${cacheKey}:timestamp`);
         if (cached !== null && whenCached !== null) {
+            if (options.loadMore) {
+                console.log(`options.loadMore =`, options.loadMore);
+                return eval(cached);
+            }
             let age = (Date.now() - whenCached) / 1000;
             if (age < expiration) {
                 return eval(cached);
@@ -149,18 +155,22 @@ class GithubJobsApp extends HTMLElement {
     }
 
     subscriberRegistration() {
-        const GithubJobsListings = this.shadowRoot.querySelector('github-jobs-listings');
+        console.log('Executing subscriberRegistration()');
+        const GithubJobsListings = this.shadowRoot.querySelector('github-jobs-listings');;
 
         this.observer.register(GithubJobsListings);
+        this.observer.register(this);
     }
 
     getListingData() {
         console.log('Executing getListingData()');
         const options = {
             seconds: 60 * 60 * 12,
-            method: "GET",
-            mode: "cors"
+            headers: new Headers({
+                "Access-Control-Allow-Origin": "*"
+            })
         }
+        console.log(`The "options" object:`, options);
         let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
         this.setEvent('data-fetched', theData);
     }
@@ -173,6 +183,34 @@ class GithubJobsApp extends HTMLElement {
 
     getEvent() {
         return this.event;
+    }
+
+    getName() {
+        return this.name;
+    }
+
+    getInterests() {
+        return this.interests;
+    }
+
+    notificationReceiver(name, interest, theData) {
+        console.log(`${name} has received the notification.`);
+        console.log(`The event "${interest}" took place.`);
+
+        switch (interest) {
+            case 'load-more':
+                this.loadMore();
+                break;
+        }
+    }
+
+    loadMore() {
+        console.log(`${this} is executing it's "loadMore() method"`);
+        const options = {
+            loadMore: true
+        }
+        let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
+        this.setEvent('loaded-more', theData);
     }
 }
 
