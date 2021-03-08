@@ -1,19 +1,21 @@
 import FilterFormModal from '../../filterformmodal/src/FilterFormModal.js';
+import eventBus from '../../../utils/EventBus.js';
 
 export default class FilterForm extends HTMLElement {
-    static get observedAttributes() {
-        return ['filterKeyword, filterLocation, fullTimeOnly'];
-    }
-
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.name = 'filter-form';
+        this.interests = [''];
+        this.observer = eventBus;
     }
 
-    attributeChangedCallback(attrName, oldValue, newValue) {
-        if (oldValue !== newValue) {
-            this[attrName] = this.getAttribute(attrName);
-        }
+    getName() {
+        return this.name;
+    }
+
+    getInterests() {
+        return this.interests;
     }
 
     connectedCallback() {
@@ -60,7 +62,7 @@ export default class FilterForm extends HTMLElement {
                     </span>
                 </span>
             </div>
-            <filter-form-modal open="false" location fullTimeOnly="false"></filter-form-modal>
+            <filter-form-modal open="false"></filter-form-modal>
         `;
     }
 
@@ -168,8 +170,6 @@ export default class FilterForm extends HTMLElement {
                     border-radius: 0px 6px 6px 0px;
                     display: flex;
                     justify-content: flex-start;
-                    XXXpadding-left: clamp(14.4px, 5vw, 32px);
-                    XXXpadding-right: clamp(3.2px, 1vw, 16px);
                     width: 31.081%;
                     position: relative;
                 }
@@ -213,7 +213,6 @@ export default class FilterForm extends HTMLElement {
                     font-size: clamp(8px, 2vw, var(--font-size-1));
                     font-weight: bold;
                     display: flex;
-                    Xmargin-right: clamp(13px, 2vw, 26px);
                     max-height: 16px;
                     white-space: nowrap;
                     margin-right: clamp(8px, 2vw, 16px);
@@ -365,6 +364,7 @@ export default class FilterForm extends HTMLElement {
 
     scripts() {
         this.filterModalOpenEvent();
+        this.clickEvents();
     }
 
     openFilterModal() {
@@ -400,7 +400,6 @@ export default class FilterForm extends HTMLElement {
             }
         });
 
-        // TEST LATER, WHEN THERE'S CONTENT TO SCROLL
         window.addEventListener('scroll', () => {
             filterFormModal.setAttribute('open', "false");
         });
@@ -410,6 +409,54 @@ export default class FilterForm extends HTMLElement {
                 filterFormModal.setAttribute('open', "false");
             }
         });
+    }
+
+    clickEvents() {
+        this.shadowRoot.addEventListener('click', (event) => {
+            event.preventDefault();
+            const { tagName } = event.target;
+            console.log(event.target);
+
+            switch (tagName) {
+                case 'BUTTON':
+                    this.publishFormDetails();
+                    break;
+                case 'LABEL':
+                    this.checkBoxManager();
+                    break;
+                case 'INPUT':
+                    if (event.target.id && event.target.id === 'fullTimeOnlyOption') {
+                        this.checkBoxManager()
+                    }
+                    break;
+            }
+        });
+    }
+
+    checkBoxManager() {
+        console.log('checkBoxManager() executing');
+        const theCheckBox = this.shadowRoot.querySelectorAll('.iconInputGroup')[2].querySelector('span > input');
+            
+        if (!theCheckBox.checked) {
+            theCheckBox.checked = true;
+        } else {
+            theCheckBox.checked = false;
+        }
+    }
+
+    publishFormDetails() {
+        const filterCriteria = {};
+        filterCriteria.description = this.shadowRoot.querySelectorAll('.iconInputGroup')[0].querySelector('span > input').value;
+        filterCriteria.location = this.shadowRoot.querySelectorAll('.iconInputGroup')[1].querySelector('span > input').value;
+        filterCriteria.type = this.shadowRoot.querySelectorAll('.iconInputGroup')[2].querySelector('span > input').checked;
+
+        for (let prop in filterCriteria) {
+            if (!filterCriteria[prop]) {
+                delete filterCriteria[prop];
+            }
+        }
+
+        this.observer.publish('filter-search', filterCriteria);
     }
 }
 

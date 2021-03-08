@@ -11,7 +11,7 @@ class GithubJobsApp extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'github-jobs-app';
-        this.interests = ['load-more']
+        this.interests = ['load-more', 'filter-search'];
         this.event = '';
         this.observer = eventBus;
 
@@ -88,7 +88,6 @@ class GithubJobsApp extends HTMLElement {
     }
 
     routerInit() {
-        console.log('Executing routerInit()');
         const route = this.shadowRoot.querySelector('#route');
 
         const router = new Navigo(window.location.origin);
@@ -103,7 +102,6 @@ class GithubJobsApp extends HTMLElement {
     }
 
     cachedFetch(url, options) {
-        console.log(`Executing cachedFetch()`);
         let expiration = 60 * 60 * 12;
 
         switch (options) {
@@ -123,8 +121,7 @@ class GithubJobsApp extends HTMLElement {
             : console.log(`The data came from the local cache`);
         let whenCached = localStorage.getItem(`${cacheKey}:timestamp`);
         if (cached !== null && whenCached !== null) {
-            if (options.loadMore) {
-                console.log(`options.loadMore =`, options.loadMore);
+            if (options.loadMore || options.search) {
                 return eval(cached);
             }
             let age = (Date.now() - whenCached) / 1000;
@@ -138,7 +135,6 @@ class GithubJobsApp extends HTMLElement {
 
         fetch(url, options)
             .then((response) => {
-                console.log(`response.status:`, response.status);
                 if (response.status === 200) {
                     let contentType = response.headers.get('Content-Type');
                     if (contentType && (contentType.match(/application\/json/i) ||
@@ -155,7 +151,6 @@ class GithubJobsApp extends HTMLElement {
     }
 
     subscriberRegistration() {
-        console.log('Executing subscriberRegistration()');
         const GithubJobsListings = this.shadowRoot.querySelector('github-jobs-listings');;
 
         this.observer.register(GithubJobsListings);
@@ -163,20 +158,18 @@ class GithubJobsApp extends HTMLElement {
     }
 
     getListingData() {
-        console.log('Executing getListingData()');
         const options = {
             seconds: 60 * 60 * 12,
             headers: new Headers({
                 "Access-Control-Allow-Origin": "*"
             })
         }
-        console.log(`The "options" object:`, options);
+
         let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
         this.setEvent('data-fetched', theData);
     }
 
     setEvent(newEvent, theData) {
-        console.log('Setting a new event via setEvent()');
         this.event = newEvent;
         this.observer.publish(this.getEvent(), theData);
     }
@@ -201,16 +194,27 @@ class GithubJobsApp extends HTMLElement {
             case 'load-more':
                 this.loadMore();
                 break;
+            case 'filter-search':
+                this.filterSearch(theData);
+                break;
         }
     }
 
     loadMore() {
-        console.log(`${this} is executing it's "loadMore() method"`);
         const options = {
             loadMore: true
         }
         let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
         this.setEvent('loaded-more', theData);
+    }
+
+    filterSearch(filterCriteria) {
+        const options = {
+            search: true
+        }
+        let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
+        theData.filterCriteria = filterCriteria;
+        this.setEvent('filter-searched', theData);
     }
 }
 
