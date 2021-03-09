@@ -15,6 +15,7 @@ export default class GithubJobsListings extends HTMLElement {
         this.interests = ['data-fetched', 'loaded-more', 'filter-searched'];
         this.currentNumberOfBuckets = 0;
         this.numberOfListingsShown = 0;
+        this.listingsShownById = [];
         this.observer = eventBus;
     }
 
@@ -50,33 +51,41 @@ export default class GithubJobsListings extends HTMLElement {
     }
 
     html(theData, shouldFilter = false) {
-        this.numberOfListingsShown = 0;
-        this.currentNumberOfBuckets = 0;
-        setTimeout(()=> { this.shadowRoot.querySelector('load-more-button').style.display = 'block' }, 1);
+        if (this.numberOfListingsShown > 0) {
+            this.currentNumberOfBuckets = 0;
+            this.numberOfListingsShown = 0;
+            this.listingsShownById = [];
+        }
+
+        let markupLength = 0;
+        setTimeout(() => {
+            const loadMoreButton = this.shadowRoot.querySelector('load-more-button');
+            if (loadMoreButton.style.display === 'none') {
+                loadMoreButton.style.display = 'block';
+            }
+        }, 1);
 
         this.filterCriteria = this.extractFilterCriteria(shouldFilter, theData);
         delete theData.filterCriteria;
 
         let markup = ``;
-        const listingsPreviewsPerPage = this.getAttribute('listingsPreviewsPerPage');
+        let listingsPreviewsPerPage = Number(this.getAttribute('listingsPreviewsPerPage'));
 
-        for (let i = 0; i < listingsPreviewsPerPage; i++) {
+        for (let i = 0; i < 50; i++) {
+            if (markupLength === 12) {
+                break;
+            }
 
             let loopCommands = {};
 
-            // If we want to filter and there is a truthy filterCriteria object
             if (shouldFilter && this.filterCriteria) {
-                // Returns a Boolean that tells the loop to skip or not
-                // If the properties of data[i] doesn't meet the filter criteria, the value will indicate to skip
                 loopCommands.toSkip = this.criteriaFilter(theData[i], this.filterCriteria);
             }
 
-            // Assessing the skip/don't skip value that based on the filter criteria
             if (loopCommands.toSkip) {
                 continue;
-            }
-
-            markup += `<github-job-listing-preview
+            } else {
+                markup += `<github-job-listing-preview
                 companyLogo="${theData[i].company_logo}"
                 id="${theData[i].id}"
                 employmentType="${theData[i].type}"
@@ -91,7 +100,11 @@ export default class GithubJobsListings extends HTMLElement {
                 >
             </github-job-listing-preview>`;
 
+            this.listingsShownById[this.listingsShownById.length] = theData[i].id;
+            
+            markupLength++;
             this.numberOfListingsShown++;
+            }
         }
 
         if (!shouldFilter) {
@@ -104,8 +117,9 @@ export default class GithubJobsListings extends HTMLElement {
                 
             this.currentNumberOfBuckets++;
         } else if (shouldFilter) {
-                this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML = ``;
-                this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
+            this.clearListingContainer();
+            this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
+            this.currentNumberOfBuckets++;
         }
 
         
@@ -228,23 +242,26 @@ export default class GithubJobsListings extends HTMLElement {
 
         const listingPerPage = Number(this.getAttribute('listingsPreviewsPerPage'));
 
-        const startingAt = (this.currentNumberOfBuckets * listingPerPage);
+        const startingAt = this.numberOfListingsShown;
+        let markupLength = 0;
 
-        for (let i = startingAt; i < (startingAt + listingPerPage); i++) {
+        for (let i = startingAt; markupLength < listingPerPage; i++) {
             if (this.numberOfListingsShown >= 50 || i >= 50) {
-                this.shadowRoot.querySelector('load-more-button').style.display = 'none';
+                this.removeLoadMoreButton();
                 break;
             }
 
             let loopCommands = {};
 
             if (shouldFilter && this.filterCriteria) {
-                console.log(`this.filterCriteria`, this.filterCriteria);
                 loopCommands.toSkip = this.criteriaFilter(theData[i], this.filterCriteria);
             }
 
             if (loopCommands.toSkip) {
-                console.log(`Skipping at ${i}`);
+                continue;
+            }
+
+            if (this.alreadyShowing(this.listingsShownById, theData[i].id)) {
                 continue;
             }
 
@@ -263,6 +280,8 @@ export default class GithubJobsListings extends HTMLElement {
                 >
             </github-job-listing-preview>`;
 
+            this.listingsShownById[this.listingsShownById.length] = theData[i].id;
+            markupLength++;
             this.numberOfListingsShown++;
         }
 
@@ -271,16 +290,14 @@ export default class GithubJobsListings extends HTMLElement {
     }
 
     criteriaFilter(theData, filterCriteria) {
-        console.log('Executing criteriaFilter()');
-        // this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML =``;
-        // if (!filterCriteria.location && !filterCriteria.description && !filterCriteria.type) {
-        //     return false;
-        // }
+        if (!filterCriteria.location && !filterCriteria.description && !filterCriteria.type) {
+            return false;
+        }
 
-        if (filterCriteria.location &&
-            !theData.location.toLowerCase().includes( filterCriteria.location.toLowerCase() )){
+        if (filterCriteria.location && !theData.location.toLowerCase().includes( filterCriteria.location.toLowerCase() )){
             return true;
         }
+
 
         if (filterCriteria.description &&
             !theData.description.toLowerCase().includes( filterCriteria.description.toLowerCase() ) &&
@@ -290,13 +307,29 @@ export default class GithubJobsListings extends HTMLElement {
             return true;
         }
 
+
         if (filterCriteria.type && !theData.type.toLowerCase().includes('full time')){
+            return true;
+        }
+
+        return false;
+    }
+
+    alreadyShowing(collection, id) {
+        if (collection.includes( id )) {
             return true;
         }
     }
 
+    clearListingContainer() {
+        this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML = ``;
+    }
+
+    removeLoadMoreButton() {
+        this.shadowRoot.querySelector('load-more-button').style.display = 'none';
+    }
+
     setEvent(newEvent, theData) {
-        console.log('Setting a new event via setEvent()');
         this.event = newEvent;
         this.observer.publish(this.getEvent(), theData);
     }
