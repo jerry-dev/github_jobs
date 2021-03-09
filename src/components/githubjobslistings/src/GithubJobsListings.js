@@ -35,7 +35,7 @@ export default class GithubJobsListings extends HTMLElement {
                 this.render(theData);
                 break;
             case 'loaded-more':
-                this.loadMore(theData);
+                this.loadMore(theData, true);
                 break;
             case 'filter-searched':
                 this.html(theData, true);
@@ -50,32 +50,30 @@ export default class GithubJobsListings extends HTMLElement {
     }
 
     html(theData, shouldFilter = false) {
-        let filterCriteria = this.extractFilterCriteria(shouldFilter, theData);
+        this.numberOfListingsShown = 0;
+        this.currentNumberOfBuckets = 0;
+        setTimeout(()=> { this.shadowRoot.querySelector('load-more-button').style.display = 'block' }, 1);
+
+        this.filterCriteria = this.extractFilterCriteria(shouldFilter, theData);
         delete theData.filterCriteria;
 
         let markup = ``;
-        const numberOfListings = this.getAttribute('listingsPreviewsPerPage');
+        const listingsPreviewsPerPage = this.getAttribute('listingsPreviewsPerPage');
 
-        for (let i in theData) {
-            if (i === numberOfListings) {
-                break;
+        for (let i = 0; i < listingsPreviewsPerPage; i++) {
+
+            let loopCommands = {};
+
+            // If we want to filter and there is a truthy filterCriteria object
+            if (shouldFilter && this.filterCriteria) {
+                // Returns a Boolean that tells the loop to skip or not
+                // If the properties of data[i] doesn't meet the filter criteria, the value will indicate to skip
+                loopCommands.toSkip = this.criteriaFilter(theData[i], this.filterCriteria);
             }
 
-            if (shouldFilter) {
-                this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML =``;
-                if (filterCriteria.location &&
-                    !theData[i].location.toLowerCase().includes( filterCriteria.location.toLowerCase() )){
-                    continue;
-                }
-
-                if (filterCriteria.description &&
-                    !theData[i].description.toLowerCase().includes( filterCriteria.description.toLowerCase() )){
-                    continue;
-                }
-
-                if (filterCriteria.type && !theData[i].type.toLowerCase().includes('full time')){
-                    continue;
-                }
+            // Assessing the skip/don't skip value that based on the filter criteria
+            if (loopCommands.toSkip) {
+                continue;
             }
 
             markup += `<github-job-listing-preview
@@ -96,18 +94,21 @@ export default class GithubJobsListings extends HTMLElement {
             this.numberOfListingsShown++;
         }
 
-        if (shouldFilter) {
-            this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
-        } else {
+        if (!shouldFilter) {
             this.shadowRoot.innerHTML += `
-            <filter-form></filter-form>
-            <div id="jobListingsInnerContainer">
-                ${markup}
-            </div>
-            <load-more-button></load-more-button>`;
+                <filter-form></filter-form>
+                <div id="jobListingsInnerContainer">
+                    ${markup}
+                </div>
+                <load-more-button></load-more-button>`;
+                
+            this.currentNumberOfBuckets++;
+        } else if (shouldFilter) {
+                this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML = ``;
+                this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
         }
+
         
-        this.currentNumberOfBuckets++;
     }
 
     css() {
@@ -222,27 +223,29 @@ export default class GithubJobsListings extends HTMLElement {
         });
     }
 
-    loadMore(theData) {
-        console.log('Executing the loadMore() method');
+    loadMore(theData, shouldFilter = false) {
         let markup = ``;
-        const numberOfListings = this.getAttribute('listingsPreviewsPerPage');
 
-        const startingAt = (this.currentNumberOfBuckets * numberOfListings);
+        const listingPerPage = Number(this.getAttribute('listingsPreviewsPerPage'));
 
-        for (let i in theData) {
-            if (this.numberOfListingsShown >= 50) {
-                console.log(`Showing ${this.numberOfListingsShown} listings`);
+        const startingAt = (this.currentNumberOfBuckets * listingPerPage);
+
+        for (let i = startingAt; i < (startingAt + listingPerPage); i++) {
+            if (this.numberOfListingsShown >= 50 || i >= 50) {
                 this.shadowRoot.querySelector('load-more-button').style.display = 'none';
                 break;
             }
 
-            if (i === 0) {
-                i = startingAt;
+            let loopCommands = {};
+
+            if (shouldFilter && this.filterCriteria) {
+                console.log(`this.filterCriteria`, this.filterCriteria);
+                loopCommands.toSkip = this.criteriaFilter(theData[i], this.filterCriteria);
             }
 
-            if (i === numberOfListings) {
-                console.log(`Showing ${this.numberOfListingsShown} listings`);
-                break;
+            if (loopCommands.toSkip) {
+                console.log(`Skipping at ${i}`);
+                continue;
             }
 
             markup += `<github-job-listing-preview
@@ -265,6 +268,31 @@ export default class GithubJobsListings extends HTMLElement {
 
         this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
         this.currentNumberOfBuckets++;
+    }
+
+    criteriaFilter(theData, filterCriteria) {
+        console.log('Executing criteriaFilter()');
+        // this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML =``;
+        // if (!filterCriteria.location && !filterCriteria.description && !filterCriteria.type) {
+        //     return false;
+        // }
+
+        if (filterCriteria.location &&
+            !theData.location.toLowerCase().includes( filterCriteria.location.toLowerCase() )){
+            return true;
+        }
+
+        if (filterCriteria.description &&
+            !theData.description.toLowerCase().includes( filterCriteria.description.toLowerCase() ) &&
+            !theData.title.toLowerCase().includes( filterCriteria.description.toLowerCase() ) &&
+            !theData.company.toLowerCase().includes( filterCriteria.description.toLowerCase() )
+            ){
+            return true;
+        }
+
+        if (filterCriteria.type && !theData.type.toLowerCase().includes('full time')){
+            return true;
+        }
     }
 
     setEvent(newEvent, theData) {
