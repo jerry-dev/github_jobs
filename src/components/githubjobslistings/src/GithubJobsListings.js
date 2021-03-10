@@ -69,7 +69,7 @@ export default class GithubJobsListings extends HTMLElement {
         delete theData.filterCriteria;
 
         let markup = ``;
-        let listingsPreviewsPerPage = Number(this.getAttribute('listingsPreviewsPerPage'));
+        // let listingsPreviewsPerPage = Number(this.getAttribute('listingsPreviewsPerPage'));
 
         for (let i = 0; i < 50; i++) {
             if (markupLength === 12) {
@@ -187,6 +187,7 @@ export default class GithubJobsListings extends HTMLElement {
 
     scripts() {
         this.clickEvents();
+        // this.observer.register(this);
     }
 
     captureDetails(event) {
@@ -329,10 +330,10 @@ export default class GithubJobsListings extends HTMLElement {
         this.shadowRoot.querySelector('load-more-button').style.display = 'none';
     }
 
-    setEvent(newEvent, theData) {
-        this.event = newEvent;
-        this.observer.publish(this.getEvent(), theData);
-    }
+    // setEvent(newEvent, theData) {
+    //     this.event = newEvent;
+    //     this.observer.publish(this.getEvent(), theData);
+    // }
 }
 
 if (!window.customElements.get('github-jobs-listings')) {

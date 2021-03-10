@@ -20,6 +20,7 @@ class EventBus {
         const index = this.subscribers[event].push(callback) - 1;
 
         this.callbackIndex[event].push({id: subscriber.getName(), position: index});
+        console.log(`${subscriber.getName()} is subscribed to the ${event} event.`);
     }
 
     register(subscriber) {

@@ -1,5 +1,7 @@
 import AppHeader from '../../appheader/src/AppHeader.js';
 import GithubJobsListings from '../../githubjobslistings/src/GithubJobsListings.js';
+import FilterForm from '../../filterform/src/FilterForm.js';
+import FilterFormModal from '../../filterformmodal/src/FilterFormModal.js';
 import eventBus from '../../../utils/EventBus.js';
 import Navigo from '../../../utils/navigo.es.js';
 
@@ -14,7 +16,6 @@ class GithubJobsApp extends HTMLElement {
         this.interests = ['load-more', 'filter-search'];
         this.event = '';
         this.observer = eventBus;
-
     }
 
     connectedCallback() {
@@ -82,8 +83,9 @@ class GithubJobsApp extends HTMLElement {
     }
 
     scripts() {
+        this.observer.register(this);
+        this.observer.register(this.shadowRoot.querySelector('github-jobs-listings'));
         this.routerInit();
-        this.subscriberRegistration();
         this.getListingData();
     }
 
@@ -148,13 +150,6 @@ class GithubJobsApp extends HTMLElement {
                 return response;
             }
         )
-    }
-
-    subscriberRegistration() {
-        const GithubJobsListings = this.shadowRoot.querySelector('github-jobs-listings');;
-
-        this.observer.register(GithubJobsListings);
-        this.observer.register(this);
     }
 
     getListingData() {

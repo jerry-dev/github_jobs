@@ -1,11 +1,12 @@
-export default class FilterFormModal extends HTMLElement {
-    static get observedAttributes() {
-        return ['open, location, fullTimeOnly'];
-    }
+import eventBus from '../../../utils/EventBus.js';
 
+export default class FilterFormModal extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.name = 'filter-form-modal';
+        this.interests = [];
+        this.observer = eventBus;
     }
 
     attributeChangedCallback(attrName, oldValue, newValue) {
@@ -16,6 +17,14 @@ export default class FilterFormModal extends HTMLElement {
 
     connectedCallback() {
         this.render();
+    }
+
+    getName() {
+        return this.name;
+    }
+
+    getInterests() {
+        return this.interests;
     }
 
     render() {
@@ -214,30 +223,39 @@ export default class FilterFormModal extends HTMLElement {
     }
 
     scripts() {
-        this.FormSubmitEvent();
-    }
-
-    formValuesToComponentAttributes() {
-        const location = this.shadowRoot.querySelector('#filterModal > .iconInputGroup > span > input').value;
-        const fullTimeOnly = this.shadowRoot.querySelectorAll('#filterModal > .iconInputGroup')[1].querySelector('span > input').checked;
-        this.setAttribute('location', location);
-        this.setAttribute('fullTimeOnly', fullTimeOnly);
+        this.clickEvents();
+        this.observer.register(this);
     }
 
     closeSelf() {
         this.setAttribute("open", "false");
     }
 
-    FormSubmitEvent() {
+    clickEvents() {
         this.shadowRoot.addEventListener('click', (event) => {
             const { tagName } = event.target;
+            console.log(tagName);
 
             switch (tagName) {
                 case 'BUTTON':
-                    this.formValuesToComponentAttributes();
+                    this.publishFormDetails();
                     this.closeSelf();
             }
         });
+    }
+
+    publishFormDetails() {
+        const filterCriteria = {};
+        filterCriteria.location = this.shadowRoot.querySelectorAll('.iconInputGroup')[0].querySelector('span > input').value;
+        filterCriteria.type = this.shadowRoot.querySelectorAll('.iconInputGroup')[1].querySelector('span > input').checked;
+
+        for (let prop in filterCriteria) {
+            if (!filterCriteria[prop]) {
+                delete filterCriteria[prop];
+            }
+        }
+
+        this.observer.publish('filterFormModalSubmit', filterCriteria);
     }
 }
 

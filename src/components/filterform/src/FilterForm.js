@@ -6,7 +6,7 @@ export default class FilterForm extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'filter-form';
-        this.interests = [''];
+        this.interests = [ 'filterFormModalSubmit' ]
         this.observer = eventBus;
     }
 
@@ -365,6 +365,7 @@ export default class FilterForm extends HTMLElement {
     scripts() {
         this.filterModalOpenEvent();
         this.clickEvents();
+        this.observer.register(this);
     }
 
     openFilterModal() {
@@ -415,10 +416,11 @@ export default class FilterForm extends HTMLElement {
         this.shadowRoot.addEventListener('click', (event) => {
             event.preventDefault();
             const { tagName } = event.target;
-            console.log(event.target);
+            console.log(tagName);
 
             switch (tagName) {
                 case 'BUTTON':
+                case 'IMG':
                     this.publishFormDetails();
                     break;
                 case 'LABEL':
@@ -434,7 +436,6 @@ export default class FilterForm extends HTMLElement {
     }
 
     checkBoxManager() {
-        console.log('checkBoxManager() executing');
         const theCheckBox = this.shadowRoot.querySelectorAll('.iconInputGroup')[2].querySelector('span > input');
             
         if (!theCheckBox.checked) {
@@ -457,6 +458,29 @@ export default class FilterForm extends HTMLElement {
         }
 
         this.observer.publish('filter-search', filterCriteria);
+    }
+
+    publishModalFormDetails(filterCriteria) {
+        filterCriteria.description = this.shadowRoot.querySelectorAll('.iconInputGroup')[0].querySelector('span > input').value;
+
+        for (let prop in filterCriteria) {
+            if (!filterCriteria[prop]) {
+                delete filterCriteria[prop];
+            }
+        }
+
+        this.observer.publish('filter-search', filterCriteria);
+    }
+
+    notificationReceiver(name, interest, theData) {
+        console.log(`${name} has received the notification.`);
+        console.log(`The event "${interest}" took place.`);
+
+        switch (interest) {
+            case 'filterFormModalSubmit':
+                this.publishModalFormDetails(theData);
+                break;
+        }
     }
 }
 
