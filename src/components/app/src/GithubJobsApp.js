@@ -1,7 +1,6 @@
 import AppHeader from '../../appheader/src/AppHeader.js';
 import GithubJobsListings from '../../githubjobslistings/src/GithubJobsListings.js';
-import FilterForm from '../../filterform/src/FilterForm.js';
-import FilterFormModal from '../../filterformmodal/src/FilterFormModal.js';
+import FullJobListing from '../../fulljoblisting/src/FullJobListing.js';
 import eventBus from '../../../utils/EventBus.js';
 import Navigo from '../../../utils/navigo.es.js';
 
@@ -9,11 +8,18 @@ class GithubJobsApp extends HTMLElement {
     static get observedAttributes() {
         return ['apiURL'];
     }
+
+    attributeChangedCallback(attrName, oldValue, newValue) {
+		if (oldValue !== newValue) {
+			this[attrName] = this.getAttribute(attrName);
+		}
+    }
+
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'github-jobs-app';
-        this.interests = ['load-more', 'filter-search'];
+        this.interests = ['load-more', 'filter-search', 'listing-clicked'];
         this.event = '';
         this.observer = eventBus;
     }
@@ -84,23 +90,41 @@ class GithubJobsApp extends HTMLElement {
 
     scripts() {
         this.observer.register(this);
+
+        // The dynamic component needs to be 
         this.observer.register(this.shadowRoot.querySelector('github-jobs-listings'));
         this.routerInit();
         this.getListingData();
     }
 
     routerInit() {
-        const route = this.shadowRoot.querySelector('#route');
+        this.route = this.shadowRoot.querySelector('#route');
 
-        const router = new Navigo(window.location.origin);
+        this.router = new Navigo(window.location.origin, true, '#!');
 
-        router
+        this.router
             .on({
-                "/listings": () => route.innerHTML = `<github-jobs-listings
+                "/listings": () => this.route.innerHTML = `<github-jobs-listings
                     listingsPreviewsPerPage=12
                 ></github-jobs-listings>`,
-                "/selectedListing": () => route.innerHTML = `<dev-jobs-listings></dev-jobs-listings>`
+                "/selectedListing": () => {
+                    const details = JSON.parse(sessionStorage.getItem('details'));
+
+                    this.route.innerHTML = `<full-job-listing
+                        companyLogo="${details.companyLogo}"
+                        companyName="${details.companyName}"
+                        companyURL="${details.companyURL}"
+                        createdAt="${details.createdAt}"
+                        employmentType="${details.employmentType}"
+                        positionTitle="${details.positionTitle}"
+                        jobLocation="${details.jobLocation}"
+                        howToApply="${details.howToApply}"
+                        jobDescription="${details.jobDescription}"
+                    ></full-job-listing>`
+                }
             });
+
+            this.router.resolve();
     }
 
     cachedFetch(url, options) {
@@ -192,6 +216,9 @@ class GithubJobsApp extends HTMLElement {
             case 'filter-search':
                 this.filterSearch(theData);
                 break;
+            case 'listing-clicked':
+                sessionStorage.setItem('details', JSON.stringify(theData));
+                this.router.navigate('/selectedListing');
         }
     }
 

@@ -8,6 +8,12 @@ export default class GithubJobsListings extends HTMLElement {
         return ['listingsPreviewsPerPage'];
     }
 
+    attributeChangedCallback(attrName, oldValue, newValue) {
+		if (oldValue !== newValue) {
+			this[attrName] = this.getAttribute(attrName);
+		}
+    }
+
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
@@ -69,7 +75,6 @@ export default class GithubJobsListings extends HTMLElement {
         delete theData.filterCriteria;
 
         let markup = ``;
-        // let listingsPreviewsPerPage = Number(this.getAttribute('listingsPreviewsPerPage'));
 
         for (let i = 0; i < 50; i++) {
             if (markupLength === 12) {
@@ -121,8 +126,6 @@ export default class GithubJobsListings extends HTMLElement {
             this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
             this.currentNumberOfBuckets++;
         }
-
-        
     }
 
     css() {
@@ -187,10 +190,9 @@ export default class GithubJobsListings extends HTMLElement {
 
     scripts() {
         this.clickEvents();
-        // this.observer.register(this);
     }
 
-    captureDetails(event) {
+    captureAndPublish(event) {
         const details = {};
         details.companyLogo = event.target.getAttribute('companyLogo');
         details.companyName = event.target.getAttribute('companyName');
@@ -200,11 +202,10 @@ export default class GithubJobsListings extends HTMLElement {
         details.positionTitle = event.target.getAttribute('positionTitle');
         details.jobDescription = event.target.getAttribute('jobDescription');
         details.howToApply = event.target.getAttribute('howToApply');
+        details.jobLocation = event.target.getAttribute('jobLocation');
 
-        // PUBLISH THE EVENT WITH THE DETAILS DATA
-        // THE ROOT COMPONENT WILL HAVE THIS EVENT AS AN INTEREST
-        // THEN ROOT COMPONENT WILL LOAD IN THE LISTING COMPONENT WITH THE DETAILS DATA
-        console.log(details)
+        this.observer.publish('listing-clicked', details);
+        
     }
 
     extractFilterCriteria(toFilter, data) {
@@ -223,13 +224,7 @@ export default class GithubJobsListings extends HTMLElement {
 
             switch (tagName) {
                 case 'GITHUB-JOB-LISTING-PREVIEW':
-                    // Invoked a method that:
-                    // 1. Caputures the data via captrueDetails(event)
-                    // 2. Publish the "LISTING SELECTED" event/topic with the captured data
-                    // 3. The root app is interested in the "LISTING SELECTED" event
-                    // 4. The root app loads in the listing component in the route
-                    // 5. The root app passes the captured data to the listing component
-                    this.captureDetails(event);
+                    this.captureAndPublish(event);
                     break;
                 case 'LOAD-MORE-BUTTON':
                     this.observer.publish('load-more');
@@ -329,11 +324,6 @@ export default class GithubJobsListings extends HTMLElement {
     removeLoadMoreButton() {
         this.shadowRoot.querySelector('load-more-button').style.display = 'none';
     }
-
-    // setEvent(newEvent, theData) {
-    //     this.event = newEvent;
-    //     this.observer.publish(this.getEvent(), theData);
-    // }
 }
 
 if (!window.customElements.get('github-jobs-listings')) {

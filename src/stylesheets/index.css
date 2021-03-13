@@ -2,6 +2,8 @@
 
 :root {
     --blue-1: rgb(89, 100, 224);
+    --opaque-blue-1: rgba(89, 100, 224, 0.1);
+    --opaque-blue-2: rgba(89, 100, 224, 0.35);
     --dark-grey: rgb(110, 128, 152);
     --opaque-dark-grey: rgba(110, 128, 152, 0.2);
     --grey: rgb(157, 174, 194);
@@ -24,8 +26,11 @@
     --h1-size: 28px;
     --font-family-1: 'Kumbh Sans', sans-serif;
     --font-size-1: 16px;
+    --font-size-2: 20px;
     --line-height-1: 16px;
     --line-height-2: 26px;
+    --line-height-3: 28px;
+    --line-height-4: 20px;
 }
 
 html {
