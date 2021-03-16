@@ -130,6 +130,7 @@ class GithubJobsApp extends HTMLElement {
     }
 
     cachedFetch(url, options) {
+        // Expires in three hours
         let expiration = 60 * 60 * 12;
 
         switch (options) {
@@ -181,7 +182,8 @@ class GithubJobsApp extends HTMLElement {
 
     getListingData() {
         const options = {
-            seconds: 60 * 60 * 12,
+            // Expires in one hour
+            seconds: 60 * 60 * 1,
             headers: new Headers({
                 "Access-Control-Allow-Origin": "*"
             })

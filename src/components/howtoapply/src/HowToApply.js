@@ -1,6 +1,6 @@
 export default class HowToApply extends HTMLElement {
     static get observedAttributes() {
-        return ['howToApply'];
+        return ['howToApply, companyURL, jobLocation, companyName'];
     }
 
     attributeChangedCallback(attrName, oldValue, newValue) {
@@ -12,7 +12,6 @@ export default class HowToApply extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-        console.log(this.getAttribute('howToApply'));
     }
 
     connectedCallback() {
@@ -29,9 +28,9 @@ export default class HowToApply extends HTMLElement {
             <div class="componentInnerContainer">
                 <h3>How To Apply</h3>
 
-                <p>
-                   ${this.getAttribute('howToApply')}
-                <p>
+                <div>
+                   ${this.howToApplyManager()}
+                </div>
             </div>
         `;
     }
@@ -66,18 +65,20 @@ export default class HowToApply extends HTMLElement {
                     margin-right: auto;
                     margin-top: 40px;
                     width: 87.534%;
+                    overflow-wrap: break-word;
                 }
 
                 .componentInnerContainer > h3 {
                     font-size: var(--h3-size);
                     line-height: 20px;
-                }
-
-                .componentInnerContainer > p {
                     margin-bottom: 28px;
                 }
 
-                .componentInnerContainer > p > * {
+                a {
+                    color: var(--white);
+                }
+
+                .componentInnerContainer > div {
                     color: var(--white);
                     font-size: 16px;
                     text-decoration: none;
@@ -92,7 +93,7 @@ export default class HowToApply extends HTMLElement {
             <style>
                 @media screen and (max-width: 375px) {
                     :host {
-                        background-position: bottom;
+                        background-image: url('../src/assets/icons/mobile/bg-pattern-detail-footer.svg');
                     }
     
                     .componentInnerContainer {
@@ -102,6 +103,42 @@ export default class HowToApply extends HTMLElement {
                 }
             </style>
         `;
+    }
+
+    isURLAvailable(attribute) {
+        const url = this.getAttribute(attribute);
+
+        switch (url) {
+            case null:
+            case 'null':
+            case undefined:
+            case 'undefined':
+                return false;
+            default:
+                if (url.length > 9) {
+                    return true;
+                } else {
+                    return false;
+                }
+        }
+    }
+
+    isLocationAndCompanyNameAvailable() {
+        if (this.getAttribute('companyName') && this.getAttribute('jobLocation')) {
+            return true;
+        }
+    }
+
+    howToApplyManager() {
+        if (this.isURLAvailable('howToApply')) {
+            return this.getAttribute('howToApply');
+        } else if (!this.isURLAvailable('howToApply') && this.isURLAvailable('companyURL')) {
+            return this.getAttribute('companyURL');
+        } else if (!this.isURLAvailable('howToApply') && !this.isURLAvailable('companyURL') && this.isLocationAndCompanyNameAvailable()) {
+            return `The source did not provide any valid links. Do a web search for "${this.getAttribute('companyName')}, ${this.getAttribute('jobLocation')}" to find additional information.`;
+        } else {
+            return `Please disregard this job listing. There are too many details missing.`;
+        }
     }
 }
 
