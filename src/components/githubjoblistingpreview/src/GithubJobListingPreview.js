@@ -19,7 +19,6 @@ export default class GithubJobListingPreview extends HTMLElement {
 
     connectedCallback() {
         this.render();
-        console.log(this.getAttribute('jobLocation'));
     }
 
     render() {

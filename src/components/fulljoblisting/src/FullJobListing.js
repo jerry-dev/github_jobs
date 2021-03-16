@@ -1,5 +1,6 @@
 import CompanyHeader from '../../companyheader/src/CompanyHeader.js';
 import JobDetails from '../../jobdetails/src/JobDetails.js';
+import HowToApply from '../../howtoapply/src/HowToApply.js';
 
 export default class FullJobListing extends HTMLElement {
     static get observedAttributes() {
@@ -40,9 +41,12 @@ export default class FullJobListing extends HTMLElement {
                 employmentType="${this.getAttribute('employmentType')}"
                 positionTitle="${this.getAttribute('positionTitle')}"
                 jobLocation="${this.getAttribute('jobLocation')}"
-                howToApply="${this.getAttribute('howToApply')}"
                 jobDescription="${this.getAttribute('jobDescription')}"
             ></job-details>
+
+            <how-to-apply
+                howToApply='${this.getAttribute('howToApply')}'>
+            </how-to-apply>
         `;
     }
 
@@ -69,6 +73,9 @@ export default class FullJobListing extends HTMLElement {
                     margin-bottom: 32px;
                 }
 
+                job-details {
+                    margin-bottom: 32px;
+                }
             </style>
         `;
     }

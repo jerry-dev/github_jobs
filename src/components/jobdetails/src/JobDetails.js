@@ -3,7 +3,7 @@ import URLManager from '../../../utils/URLManager.js';
 
 export default class JobDetails extends HTMLElement {
     static get observedAttributes() {
-        return [ 'companyURL, createdAt, employmentType, positionTitle, jobLocation, howToApply, jobDescription' ];
+        return [ 'companyURL, createdAt, employmentType, positionTitle, jobLocation, jobDescription' ];
     }
 
     attributeChangedCallback(attrName, oldValue, newValue) {
@@ -15,7 +15,6 @@ export default class JobDetails extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-        console.log(this.getAttribute('jobDescription'));
     }
 
     connectedCallback() {
@@ -118,7 +117,7 @@ export default class JobDetails extends HTMLElement {
                     width: 100%;
                 }
 
-                #companySiteLinkContainer:hover {
+                #companySiteLink:hover {
                     background-color: var(--opaque-blue-2);
                 }
 
@@ -145,6 +144,10 @@ export default class JobDetails extends HTMLElement {
 
                 #descriptionContainer > ul {
                     list-style-position: inside;
+                }
+
+                #descriptionContainer > ul li {
+                    margin-bottom: 8px;
                 }
 
                 #descriptionContainer > p {

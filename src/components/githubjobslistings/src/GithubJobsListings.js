@@ -75,7 +75,7 @@ export default class GithubJobsListings extends HTMLElement {
         delete theData.filterCriteria;
 
         let markup = ``;
-
+        
         for (let i = 0; i < 50; i++) {
             if (markupLength === 12) {
                 break;
@@ -90,20 +90,21 @@ export default class GithubJobsListings extends HTMLElement {
             if (loopCommands.toSkip) {
                 continue;
             } else {
-                markup += `<github-job-listing-preview
-                companyLogo="${theData[i].company_logo}"
-                id="${theData[i].id}"
-                employmentType="${theData[i].type}"
-                listingURL="${theData[i].url}"
-                createdAt="${new Date(theData[i].created_at).getTime()}"
-                companyName="${theData[i].company}"
-                companyURL="${theData[i].company_url}"
-                jobLocation="${theData[i].location}"
-                positionTitle="${theData[i].title}"
-                jobDescription="${theData[i].description}"
-                howToApply="${theData[i].how_to_apply}"
-                >
-            </github-job-listing-preview>`;
+                markup +=
+                `<github-job-listing-preview
+                    companyLogo="${theData[i].company_logo}"
+                    id="${theData[i].id}"
+                    employmentType="${theData[i].type}"
+                    listingURL="${theData[i].url}"
+                    createdAt="${new Date(theData[i].created_at).getTime()}"
+                    companyName="${theData[i].company}"
+                    companyURL="${theData[i].company_url}"
+                    jobLocation="${theData[i].location}"
+                    positionTitle="${theData[i].title}"
+                    jobDescription="${theData[i].description}"
+                    howToApply='${theData[i].how_to_apply}'
+                    >
+                </github-job-listing-preview>`;
 
             this.listingsShownById[this.listingsShownById.length] = theData[i].id;
             
@@ -119,8 +120,9 @@ export default class GithubJobsListings extends HTMLElement {
                     ${markup}
                 </div>
                 <load-more-button></load-more-button>`;
-                
-            this.currentNumberOfBuckets++;
+            
+
+                this.currentNumberOfBuckets++;
         } else if (shouldFilter) {
             this.clearListingContainer();
             this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
@@ -194,6 +196,7 @@ export default class GithubJobsListings extends HTMLElement {
 
     captureAndPublish(event) {
         const details = {};
+        
         details.companyLogo = event.target.getAttribute('companyLogo');
         details.companyName = event.target.getAttribute('companyName');
         details.companyURL = event.target.getAttribute('companyURL');
@@ -203,7 +206,7 @@ export default class GithubJobsListings extends HTMLElement {
         details.jobDescription = event.target.getAttribute('jobDescription');
         details.howToApply = event.target.getAttribute('howToApply');
         details.jobLocation = event.target.getAttribute('jobLocation');
-
+        
         this.observer.publish('listing-clicked', details);
         
     }
@@ -272,7 +275,7 @@ export default class GithubJobsListings extends HTMLElement {
                 jobLocation="${theData[i].location}"
                 positionTitle="${theData[i].title}"
                 jobDescription="${theData[i].description}"
-                howToApply="${theData[i].how_to_apply}"
+                howToApply='${theData[i].how_to_apply}'
                 >
             </github-job-listing-preview>`;
 

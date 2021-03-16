@@ -110,17 +110,19 @@ class GithubJobsApp extends HTMLElement {
                 "/selectedListing": () => {
                     const details = JSON.parse(sessionStorage.getItem('details'));
 
-                    this.route.innerHTML = `<full-job-listing
-                        companyLogo="${details.companyLogo}"
-                        companyName="${details.companyName}"
-                        companyURL="${details.companyURL}"
-                        createdAt="${details.createdAt}"
-                        employmentType="${details.employmentType}"
-                        positionTitle="${details.positionTitle}"
-                        jobLocation="${details.jobLocation}"
-                        howToApply="${details.howToApply}"
-                        jobDescription="${details.jobDescription}"
-                    ></full-job-listing>`
+                    this.route.innerHTML +=
+                        `<full-job-listing
+                            companyLogo="${details.companyLogo}"
+                            companyName="${details.companyName}"
+                            companyURL="${details.companyURL}"
+                            createdAt="${details.createdAt}"
+                            employmentType="${details.employmentType}"
+                            positionTitle="${details.positionTitle}"
+                            jobLocation="${details.jobLocation}"
+                            howToApply='${details.howToApply}'
+                            jobDescription="${details.jobDescription}"
+                            >
+                        </full-job-listing>`;
                 }
             });
 
@@ -152,6 +154,7 @@ class GithubJobsApp extends HTMLElement {
             }
             let age = (Date.now() - whenCached) / 1000;
             if (age < expiration) {
+                // console.log(cached);
                 return eval(cached);
             } else {
                 localStorage.removeItem(cacheKey);
