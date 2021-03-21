@@ -35,14 +35,11 @@ class GithubJobsApp extends HTMLElement {
     }
 
     html() {
-        this.shadowRoot.innerHTML += `
+        this.shadowRoot.innerHTML = `
             <div id="appOuterContainer">
                 <div id="appInnerContainer">
-                    <app-header></app-header>
-                    <div id="route">
-                        <github-jobs-listings listingsPreviewsPerPage=12>
-                        </github-jobs-listings>
-                    </div>
+                <app-header></app-header>
+                <div id="route">
                 </div>
             </div>
         `;
@@ -66,7 +63,6 @@ class GithubJobsApp extends HTMLElement {
                 background-repeat: no-repeat;    
                 padding-left: clamp(33px, 12vw, 165px);
                 padding-right: clamp(33px, 12vw, 165px);
-                OUTLINE: 2PX SOLID GOLD;
             }
                 
             @media screen and (max-width: 768px) {
@@ -89,28 +85,22 @@ class GithubJobsApp extends HTMLElement {
     }
 
     scripts() {
-        this.observer.register(this);
-
-        // The dynamic component needs to be 
-        this.observer.register(this.shadowRoot.querySelector('github-jobs-listings'));
         this.routerInit();
-        this.getListingData();
+        this.observer.register(this);
     }
 
     routerInit() {
         this.route = this.shadowRoot.querySelector('#route');
+        this.router = new Navigo(window.location.origin, { hash: true });
 
-        this.router = new Navigo(window.location.origin, true, '#!');
+        this.router.on("/", () => {
+            this.route.innerHTML = `<github-jobs-listings listingsPreviewsPerPage=12></github-jobs-listings>`;
+            this.getListingData();
+        });
 
-        this.router
-            .on({
-                "/listings": () => this.route.innerHTML = `<github-jobs-listings
-                    listingsPreviewsPerPage=12
-                ></github-jobs-listings>`,
-                "/selectedListing": () => {
-                    const details = JSON.parse(sessionStorage.getItem('details'));
-
-                    this.route.innerHTML +=
+        this.router.on("/selectedListing", () => {
+                const details = JSON.parse(sessionStorage.getItem('details'));
+                    this.route.innerHTML =
                         `<full-job-listing
                             companyLogo="${details.companyLogo}"
                             companyName="${details.companyName}"
@@ -124,14 +114,13 @@ class GithubJobsApp extends HTMLElement {
                             >
                         </full-job-listing>`;
                 }
-            });
-
-            this.router.resolve();
+        );
+        this.router.resolve();
     }
 
     cachedFetch(url, options) {
         // Expires in three hours
-        let expiration = 60 * 60 * 12;
+        let expiration = 60 * 60 * 3;
 
         switch (options) {
             case 'number':
@@ -155,7 +144,6 @@ class GithubJobsApp extends HTMLElement {
             }
             let age = (Date.now() - whenCached) / 1000;
             if (age < expiration) {
-                // console.log(cached);
                 return eval(cached);
             } else {
                 localStorage.removeItem(cacheKey);
@@ -182,10 +170,10 @@ class GithubJobsApp extends HTMLElement {
 
     getListingData() {
         const options = {
-            // Expires in one hour
-            seconds: 60 * 60 * 1,
+            // Expires in seven hours
+            seconds: 60 * 60 * 7,
             headers: new Headers({
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": window.location.origin
             })
         }
 

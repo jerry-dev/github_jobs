@@ -30,7 +30,7 @@ export default class CompanyHeader extends HTMLElement {
                             <h2>${this.getAttribute('companyName')}</h2>
                             <h4>${URLManager(this.getAttribute('companyURL'))}</h4>
                         </span>
-                        <a id="companySiteLinkContainer" href="${URLManager(this.getAttribute('companyURL'))}">
+                        <a id="companySiteLinkContainer" target="_blank" href="${this.getAttribute('companyURL')}">
                             Company Site
                         </a>
                     </span>

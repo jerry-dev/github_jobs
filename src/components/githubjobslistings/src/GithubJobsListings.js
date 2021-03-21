@@ -25,6 +25,10 @@ export default class GithubJobsListings extends HTMLElement {
         this.observer = eventBus;
     }
 
+    connectedCallback() {
+        this.observer.register(this);
+    }
+
     getName() {
         return this.name;
     }
@@ -114,14 +118,13 @@ export default class GithubJobsListings extends HTMLElement {
         }
 
         if (!shouldFilter) {
-            this.shadowRoot.innerHTML += `
+            this.shadowRoot.innerHTML = `
                 <filter-form></filter-form>
                 <div id="jobListingsInnerContainer">
                     ${markup}
                 </div>
                 <load-more-button></load-more-button>`;
             
-
                 this.currentNumberOfBuckets++;
         } else if (shouldFilter) {
             this.clearListingContainer();

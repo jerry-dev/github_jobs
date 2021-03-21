@@ -40,7 +40,7 @@ export default class JobDetails extends HTMLElement {
                     </span>
                     
                     <span id="end">
-                        <a id="companySiteLink" href="${URLManager(this.getAttribute('companyURL'))}">
+                        <a id="companySiteLink" target="_blank" href="${this.getAttribute('companyURL')}">
                             Apply Now
                         </a>
                     </span>

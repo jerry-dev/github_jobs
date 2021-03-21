@@ -22,13 +22,23 @@ const URLManager = function(url) {
                     reformattedURL = reformattedURL.replace(regex, '.io');
                 }
 
-                if (reformattedURL.includes('http')) {
+                if (reformattedURL.includes('http:')) {
                     const regex = new RegExp('http:');
                     reformattedURL = reformattedURL.replace(regex, '');
                 }
 
                 if (reformattedURL.includes('https:')) {
                     const regex = new RegExp('https:');
+                    reformattedURL = reformattedURL.replace(regex, '');
+                }
+
+                if (reformattedURL.includes('http')) {
+                    const regex = new RegExp('http');
+                    reformattedURL = reformattedURL.replace(regex, '');
+                }
+
+                if (reformattedURL.includes('https')) {
+                    const regex = new RegExp('https');
                     reformattedURL = reformattedURL.replace(regex, '');
                 }
 
