@@ -142,6 +142,10 @@ export default class JobDetails extends HTMLElement {
                     width: 100%;
                 }
 
+                #descriptionContainer > pre {
+                    white-space: break-spaces;
+                }
+
                 #descriptionContainer > ul {
                     list-style-position: inside;
                 }
