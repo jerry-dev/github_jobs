@@ -210,6 +210,7 @@ class GithubJobsApp extends HTMLElement {
                 this.filterSearch(theData);
                 break;
             case 'listing-clicked':
+                this.teleportToTheTop()
                 sessionStorage.setItem('details', JSON.stringify(theData));
                 this.router.navigate('/selectedListing');
         }
@@ -230,6 +231,14 @@ class GithubJobsApp extends HTMLElement {
         let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
         theData.filterCriteria = filterCriteria;
         this.setEvent('filter-searched', theData);
+    }
+
+    teleportToTheTop() {
+        const route = this.shadowRoot.querySelector('#route');
+        window.scroll({
+            top: route,
+            behavior: "auto"
+        });
     }
 }
 

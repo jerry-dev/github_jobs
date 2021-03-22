@@ -26,6 +26,7 @@ export default class FullJobListing extends HTMLElement {
     render() {
         this.html();
         this.css();
+        this.scripts();
     }
 
     html() {
@@ -174,6 +175,25 @@ export default class FullJobListing extends HTMLElement {
                 }
             </style>
         `;
+    }
+
+    scripts() {
+        this.loadInAnimation();
+    }
+
+    loadInAnimation() {
+        const container1 = this.shadowRoot.querySelector('.componentContainer-1');
+
+        container1.animate([
+            {
+                opacity: 0,
+                transform: `translateX(-50px)`
+            },
+            {
+                opacity: 1,
+                transform: `translateX(0px)`
+            }
+        ], 400);
     }
 }
 

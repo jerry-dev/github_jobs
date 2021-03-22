@@ -195,6 +195,7 @@ export default class GithubJobsListings extends HTMLElement {
 
     scripts() {
         this.clickEvents();
+        this.loadListingAnimation();
     }
 
     captureAndPublish(event) {
@@ -329,6 +330,22 @@ export default class GithubJobsListings extends HTMLElement {
 
     removeLoadMoreButton() {
         this.shadowRoot.querySelector('load-more-button').style.display = 'none';
+    }
+
+    loadListingAnimation() {
+        const listings = this.shadowRoot.querySelectorAll('github-job-listing-preview');
+        for (let i = 0; i < listings.length; i++) {
+            listings[i].animate([
+            {
+                opacity: 0,
+                transform: "scale(0)"
+            },
+            {
+                opacity: 1,
+                transform: "scale(1)"
+            }
+        ], eval(`${i+3}00`));
+        }
     }
 }
 
