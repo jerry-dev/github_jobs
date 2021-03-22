@@ -20,7 +20,7 @@ export default class AppHeader extends HTMLElement {
     html() {
         this.shadowRoot.innerHTML += `
             <div id="headerInnerContainer">
-                <img class="logo" src="../src/assets/icons/desktop/logo.svg">
+                <a href="/"><img class="logo" src="../src/assets/icons/desktop/logo.svg"></a>
                 <theme-toggle nightThemeOn=false></theme-toggle>
             </div>
         `;
@@ -35,6 +35,11 @@ export default class AppHeader extends HTMLElement {
                     display: block;
                     padding-bottom: 44px;
                     padding-top: 45px;
+                }
+
+                a {
+                    width: 115px;
+                    height: 32px;
                 }
 
                 #headerInnerContainer {
