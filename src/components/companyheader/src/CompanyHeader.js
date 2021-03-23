@@ -1,5 +1,6 @@
 import logoManager from '../../../utils/logoManager.js';
 import URLManager from '../../../utils/URLManager.js';
+import eventBus from '../../../utils/EventBus.js';
 
 export default class CompanyHeader extends HTMLElement {
     static get observedAttributes() {
@@ -9,10 +10,14 @@ export default class CompanyHeader extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.name = `CompanyHeader`;
+        this.interests = ['dark-theme-activated', 'dark-theme-deactivated'];
+        this.observer = eventBus;
     }
 
     connectedCallback() {
         this.render();
+        this.observer.register(this);
     }
 
     render() {
@@ -50,7 +55,26 @@ export default class CompanyHeader extends HTMLElement {
                 *, *::before, *::after { padding: 0; margin: 0; }
 
                 :host {
+                    background-color: var(--white);
+                    display: block;
                     width: 100%;
+                }
+
+                :host(.darktheme) {
+                    background-color: var(--very-dark-blue);
+                }
+
+                :host(.darktheme) h2 {
+                    color: var(--white);
+                }
+
+                :host(.darktheme) #companySiteLinkContainer {
+                    background-color: var(--opaque-white-2);
+                    color: var(--white);
+                }
+
+                :host(.darktheme) #companySiteLinkContainer:hover {
+                    background-color: var(--opaque-white-3);
                 }
 
                 a {
@@ -73,7 +97,6 @@ export default class CompanyHeader extends HTMLElement {
                     padding-bottom: 42px;
                     padding-top: 42px;
                     width: 100%;
-                    background-color: var(--white);
                 }
 
                 #companyHeaderContainer > .innerContainer {
@@ -169,6 +192,40 @@ export default class CompanyHeader extends HTMLElement {
 
             </style>
         `;
+    }
+
+    scripts() {
+        this.darkThemeSync();
+    }
+
+    getName() {
+        return this.name;
+    }
+
+    getInterests() {
+        return this.interests;
+    }
+
+    notificationReceiver(name, interest, theData) {
+        console.log(`${name} has received the notification.`);
+        console.log(`The event "${interest}" took place.`);
+
+        switch (interest) {
+            case 'dark-theme-activated':
+                this.activateDarkTheme();
+                break;
+            case 'dark-theme-deactivated':
+                this.deactivateDarkTheme();
+                break;
+        }
+    }
+
+    activateDarkTheme() {
+        this.classList.add('darktheme');
+    }
+
+    deactivateDarkTheme() {
+        this.classList.remove('darktheme');
     }
 }
 

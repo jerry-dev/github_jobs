@@ -18,7 +18,7 @@ export default class GithubJobsListings extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'github-jobs-listings';
-        this.interests = ['data-fetched', 'loaded-more', 'filter-searched'];
+        this.interests = ['data-fetched', 'loaded-more', 'filter-searched', 'dark-theme-activated', 'dark-theme-deactivated'];
         this.currentNumberOfBuckets = 0;
         this.numberOfListingsShown = 0;
         this.listingsShownById = [];
@@ -50,6 +50,12 @@ export default class GithubJobsListings extends HTMLElement {
                 break;
             case 'filter-searched':
                 this.html(theData, true);
+                break;
+            case 'dark-theme-activated':
+                this.activateDarkTheme();
+                break;
+            case 'dark-theme-deactivated':
+                this.deactivateDarkTheme();
                 break;
         }
     }
@@ -212,7 +218,6 @@ export default class GithubJobsListings extends HTMLElement {
         details.jobLocation = event.target.getAttribute('jobLocation');
         
         this.observer.publish('listing-clicked', details);
-        
     }
 
     extractFilterCriteria(toFilter, data) {
@@ -289,6 +294,9 @@ export default class GithubJobsListings extends HTMLElement {
         }
 
         this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
+        if (this.classList.contains('darktheme')) {
+            this.activateDarkTheme();
+        }
         this.currentNumberOfBuckets++;
     }
 
@@ -345,6 +353,24 @@ export default class GithubJobsListings extends HTMLElement {
                 transform: "scale(1)"
             }
         ], eval(`${i+3}00`));
+        }
+    }
+
+    activateDarkTheme() {
+        this.classList.add('darktheme');
+        const previews = this.shadowRoot.querySelectorAll('github-job-listing-preview');
+
+        for (let i = 0; i < previews.length; i++) {
+            previews[i].classList.add('darktheme');
+        }
+    }
+
+    deactivateDarkTheme() {
+        this.classList.remove('darktheme');
+        const previews = this.shadowRoot.querySelectorAll('github-job-listing-preview');
+
+        for (let i = 0; i < previews.length; i++) {
+            previews[i].classList.remove('darktheme');
         }
     }
 }

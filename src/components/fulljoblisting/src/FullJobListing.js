@@ -2,6 +2,7 @@ import CompanyHeader from '../../companyheader/src/CompanyHeader.js';
 import JobDetails from '../../jobdetails/src/JobDetails.js';
 import HowToApply from '../../howtoapply/src/HowToApply.js';
 import CompanyFooter from '../../companyfooter/src/CompanyFooter.js';
+import eventBus from '../../../utils/EventBus.js';
 
 export default class FullJobListing extends HTMLElement {
     static get observedAttributes() {
@@ -17,10 +18,14 @@ export default class FullJobListing extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.name = 'full-job-listing';
+        this.interests = ['dark-theme-activated', 'dark-theme-deactivated'];
+        this.observer = eventBus;
     }
 
     connectedCallback() {
         this.render();
+        this.observer = eventBus;
     }
 
     render() {
@@ -90,9 +95,6 @@ export default class FullJobListing extends HTMLElement {
                     margin-left: auto;
                     margin-right: auto;
                     width: 65.765%;
-                }
-
-                company-header {
                 }
 
                 job-details {
@@ -179,6 +181,7 @@ export default class FullJobListing extends HTMLElement {
 
     scripts() {
         this.loadInAnimation();
+        this.darkThemeSync();
     }
 
     loadInAnimation() {
@@ -194,6 +197,37 @@ export default class FullJobListing extends HTMLElement {
                 transform: `translateX(0px)`
             }
         ], 400);
+    }
+
+    notificationReceiver(name, interest, theData) {
+        console.log(`${name} has received the notification.`);
+        console.log(`The event "${interest}" took place.`);
+
+        switch (interest) {
+            case 'dark-theme-activated':
+                this.activateDarkTheme();
+                break;
+            case 'dark-theme-deactivated':
+                this.deactivateDarkTheme();
+                break;
+        }
+    }
+
+    activateDarkTheme() {
+        this.classList.add('darktheme');
+    }
+
+    deactivateDarkTheme() {
+        this.classList.remove('darktheme');
+    }
+
+    darkThemeSync() {
+        if (this.classList.contains('darktheme')) {
+            this.shadowRoot.querySelector('company-header').classList.add('darktheme');
+            this.shadowRoot.querySelector('job-details').classList.add('darktheme');
+            this.shadowRoot.querySelector('how-to-apply').classList.add('darktheme');
+            this.shadowRoot.querySelector('company-footer').classList.add('darktheme');
+        }
     }
 }
 

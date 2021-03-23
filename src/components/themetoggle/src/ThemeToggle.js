@@ -1,3 +1,5 @@
+import eventBus from '../../../utils/EventBus.js';
+
 export default class ThemeToggle extends HTMLElement {
     static get observedAttributes() {
         return ['checked'];
@@ -6,6 +8,7 @@ export default class ThemeToggle extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.observer = eventBus;
     }
 
     connectedCallback() {
@@ -94,6 +97,11 @@ export default class ThemeToggle extends HTMLElement {
         const toggle = this.shadowRoot.querySelector('#themeToggleInnerContainer > #themeSwitch');
         toggle.addEventListener('click', (event) => {
             this.setAttribute('checked', event.target.checked);
+            if (event.target.checked) {
+                this.observer.publish('dark-theme-activated');
+            } else {
+                this.observer.publish('dark-theme-deactivated');
+            }
         });
     }
 }

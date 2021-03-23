@@ -1,5 +1,6 @@
 import createdAt from '../../../utils/createdAt.js';
 import logoManager from '../../../utils/logoManager.js';
+import eventBus from '../../../utils/EventBus.js';
 
 export default class GithubJobListingPreview extends HTMLElement {
     static get observedAttributes() {
@@ -62,10 +63,18 @@ export default class GithubJobListingPreview extends HTMLElement {
                     width: 100%;
                 }
 
+                :host(.darktheme) {
+                    background-color: var(--very-dark-blue);
+                }
+
+                :host(.darktheme) .positionTitle {
+                    color: var(--white);
+                }
+
                 .listingPreviewInnerContainer {
                     display: flex;
                     flex-direction: column;
-                    height: 168PX;
+                    height: 168px;
                     justify-content: space-between;
                     margin-bottom: 32px;
                     margin-left: auto;

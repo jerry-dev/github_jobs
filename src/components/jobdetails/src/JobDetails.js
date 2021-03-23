@@ -1,5 +1,6 @@
 import createdAt from '../../../utils/createdAt.js';
 import URLManager from '../../../utils/URLManager.js';
+import eventBus from '../../../utils/EventBus.js';
 
 export default class JobDetails extends HTMLElement {
     static get observedAttributes() {
@@ -15,10 +16,14 @@ export default class JobDetails extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.name = 'job-details';
+        this.interests = ['dark-theme-activated', 'dark-theme-deactivated'];
+        this.observer = eventBus;
     }
 
     connectedCallback() {
         this.render();
+        this.observer.register(this);
     }
 
     render() {
@@ -69,6 +74,21 @@ export default class JobDetails extends HTMLElement {
                     display: flex;
                     flex-direction: column;
                     width: 100%;
+                }
+
+                :host(.darktheme) {
+                    background-color: var(--very-dark-blue);
+                }
+
+                :host(.darktheme) #companySiteLink:hover {
+                    background-color: var(--light-violet);
+                }
+
+                :host(.darktheme) .title,
+                :host(.darktheme) #descriptionContainer > h1,
+                :host(.darktheme) #descriptionContainer > h2,
+                :host(.darktheme) #descriptionContainer strong {
+                    color: var(--white);
                 }
 
                 a {
@@ -140,6 +160,10 @@ export default class JobDetails extends HTMLElement {
                     line-height: var(--line-height-2);
                     margin-bottom: 24px;
                     width: 100%;
+                }
+
+                :host #descriptionContainer strong {
+                    color: var(--very-dark-blue);
                 }
 
                 #descriptionContainer > pre {
@@ -215,6 +239,36 @@ export default class JobDetails extends HTMLElement {
                 }
             </style>
         `;
+    }
+
+    getName() {
+        return this.name;
+    }
+
+    getInterests() {
+        return this.interests;
+    }
+
+    activateDarkTheme() {
+        this.classList.add('darktheme');
+    }
+
+    deactivateDarkTheme() {
+        this.classList.remove('darktheme');
+    }
+
+    notificationReceiver(name, interest, theData) {
+        console.log(`${name} has received the notification.`);
+        console.log(`The event "${interest}" took place.`);
+
+        switch (interest) {
+            case 'dark-theme-activated':
+                this.activateDarkTheme();
+                break;
+            case 'dark-theme-deactivated':
+                this.deactivateDarkTheme();
+                break;
+        }
     }
 }
 

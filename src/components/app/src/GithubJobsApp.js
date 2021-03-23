@@ -19,7 +19,7 @@ class GithubJobsApp extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'github-jobs-app';
-        this.interests = ['load-more', 'filter-search', 'listing-clicked'];
+        this.interests = ['load-more', 'filter-search', 'listing-clicked', 'dark-theme-activated', 'dark-theme-deactivated'];
         this.event = '';
         this.observer = eventBus;
     }
@@ -50,6 +50,11 @@ class GithubJobsApp extends HTMLElement {
         <style>
             :host {
                 display: block;
+                min-height: 100%;
+            }
+
+            :host(.darktheme) {
+                background-color: var(--midnight);
             }
 
             #appOuterContainer {
@@ -101,7 +106,7 @@ class GithubJobsApp extends HTMLElement {
         this.router.on("/selectedListing", () => {
                 const details = JSON.parse(sessionStorage.getItem('details'));
                     this.route.innerHTML =
-                        `<full-job-listing
+                        `<full-job-listing ${this.darkThemeSync()}
                             companyLogo="${details.companyLogo}"
                             companyName="${details.companyName}"
                             companyURL="${details.companyURL}"
@@ -213,6 +218,11 @@ class GithubJobsApp extends HTMLElement {
                 this.teleportToTheTop()
                 sessionStorage.setItem('details', JSON.stringify(theData));
                 this.router.navigate('/selectedListing');
+                break;
+            case 'dark-theme-activated':
+            case 'dark-theme-deactivated':
+                this.themeManager();
+                break;
         }
     }
 
@@ -239,6 +249,16 @@ class GithubJobsApp extends HTMLElement {
             top: route,
             behavior: "auto"
         });
+    }
+
+    themeManager() {
+        this.classList.toggle('darktheme');
+    }
+
+    darkThemeSync() {
+        if (this.classList.contains('darktheme')) {
+            return `class="darktheme"`;
+        }
     }
 }
 

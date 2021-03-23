@@ -6,7 +6,7 @@ export default class FilterForm extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'filter-form';
-        this.interests = [ 'filterFormModalSubmit' ]
+        this.interests = [ 'filterFormModalSubmit', 'dark-theme-activated', 'dark-theme-deactivated' ]
         this.observer = eventBus;
     }
 
@@ -72,8 +72,20 @@ export default class FilterForm extends HTMLElement {
                 *, *::before, *::after { padding: 0; margin: 0; }
 
                 :host {
+                    background-color: var(--white);
                     display: block;
                     width: 100%;
+                }
+
+                :host(.darktheme),
+                :host(.darktheme) input[type="text"],
+                :host(.darktheme) .iconInputGroup input::placeholder{
+                    color: var(--opaque-white);
+                    background-color: var(--very-dark-blue);
+                }
+
+                :host(.darktheme) label {
+                    color: var(--white);
                 }
 
                 .mobileIcons {
@@ -88,7 +100,7 @@ export default class FilterForm extends HTMLElement {
 
                 .iconInputGroup {
                     align-items: center;
-                    background-color: var(--white);
+                    
                     display: flex;
                     flex-direction: row;
                     justify-content: left;
@@ -416,7 +428,6 @@ export default class FilterForm extends HTMLElement {
         this.shadowRoot.addEventListener('click', (event) => {
             event.preventDefault();
             const { tagName } = event.target;
-            console.log(tagName);
 
             switch (tagName) {
                 case 'BUTTON':
@@ -480,7 +491,15 @@ export default class FilterForm extends HTMLElement {
             case 'filterFormModalSubmit':
                 this.publishModalFormDetails(theData);
                 break;
+            case 'dark-theme-activated':
+            case 'dark-theme-deactivated':
+                this.themeManager();
+                break;
         }
+    }
+
+    themeManager() {
+        this.classList.toggle('darktheme');
     }
 }
 

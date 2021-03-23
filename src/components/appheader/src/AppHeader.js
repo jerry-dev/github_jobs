@@ -20,7 +20,9 @@ export default class AppHeader extends HTMLElement {
     html() {
         this.shadowRoot.innerHTML += `
             <div id="headerInnerContainer">
-                <a href="/"><img class="logo" src="../src/assets/icons/desktop/logo.svg"></a>
+                <a href="/">
+                    <img class="logo" src="../src/assets/icons/desktop/logo.svg">
+                </a>
                 <theme-toggle nightThemeOn=false></theme-toggle>
             </div>
         `;

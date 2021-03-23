@@ -15,6 +15,9 @@
     --opaque-very-dark-blue-2: rgba(25, 32, 45, 0.5);
     --violet: rgb(158, 127, 102);
     --white: rgb(255, 255, 255);
+    --opaque-white: rgba(255, 255, 255, 0.5);
+    --opaque-white-2: rgba(255, 255, 255, 0.1);
+    --opaque-white-3: rgba(255, 255, 255, 0.25);
     --overlay-color: rgba(0, 0, 0, 0.5);
     --h4-height: 18px;
     --h3-height: 24px;
