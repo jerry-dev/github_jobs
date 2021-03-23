@@ -492,14 +492,20 @@ export default class FilterForm extends HTMLElement {
                 this.publishModalFormDetails(theData);
                 break;
             case 'dark-theme-activated':
+                this.activateDarkTheme();
+                break;
             case 'dark-theme-deactivated':
-                this.themeManager();
+                this.deactivateDarkTheme()
                 break;
         }
     }
 
-    themeManager() {
-        this.classList.toggle('darktheme');
+    activateDarkTheme() {
+        this.classList.add('darktheme');
+    }
+
+    deactivateDarkTheme() {
+        this.classList.remove('darktheme');
     }
 }
 

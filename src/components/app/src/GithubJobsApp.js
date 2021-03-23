@@ -53,10 +53,6 @@ class GithubJobsApp extends HTMLElement {
                 min-height: 100%;
             }
 
-            :host(.darktheme) {
-                background-color: var(--midnight);
-            }
-
             #appOuterContainer {
                 margin-left: auto;
                 margin-right: auto;
@@ -99,7 +95,7 @@ class GithubJobsApp extends HTMLElement {
         this.router = new Navigo(window.location.origin, { hash: true });
 
         this.router.on("/", () => {
-            this.route.innerHTML = `<github-jobs-listings listingsPreviewsPerPage=12></github-jobs-listings>`;
+            this.route.innerHTML = `<github-jobs-listings ${this.darkThemeSync()} listingsPreviewsPerPage=12></github-jobs-listings>`;
             this.getListingData();
         });
 
@@ -220,8 +216,10 @@ class GithubJobsApp extends HTMLElement {
                 this.router.navigate('/selectedListing');
                 break;
             case 'dark-theme-activated':
+                this.activateDarkTheme();
+                break;
             case 'dark-theme-deactivated':
-                this.themeManager();
+                this.deactivateDarkTheme()
                 break;
         }
     }
@@ -251,8 +249,14 @@ class GithubJobsApp extends HTMLElement {
         });
     }
 
-    themeManager() {
-        this.classList.toggle('darktheme');
+    activateDarkTheme() {
+        this.classList.add('darktheme');
+        this.parentNode.classList.add('darktheme');
+    }
+
+    deactivateDarkTheme() {
+        this.classList.remove('darktheme');
+        this.parentNode.classList.remove('darktheme');
     }
 
     darkThemeSync() {

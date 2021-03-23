@@ -125,7 +125,7 @@ export default class GithubJobsListings extends HTMLElement {
 
         if (!shouldFilter) {
             this.shadowRoot.innerHTML = `
-                <filter-form></filter-form>
+                <filter-form ${this.darkThemeClassManager()}></filter-form>
                 <div id="jobListingsInnerContainer">
                     ${markup}
                 </div>
@@ -137,6 +137,7 @@ export default class GithubJobsListings extends HTMLElement {
             this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
             this.currentNumberOfBuckets++;
         }
+        this.darkThemeSync();
     }
 
     css() {
@@ -294,9 +295,7 @@ export default class GithubJobsListings extends HTMLElement {
         }
 
         this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
-        if (this.classList.contains('darktheme')) {
-            this.activateDarkTheme();
-        }
+        this.darkThemeSync();
         this.currentNumberOfBuckets++;
     }
 
@@ -371,6 +370,18 @@ export default class GithubJobsListings extends HTMLElement {
 
         for (let i = 0; i < previews.length; i++) {
             previews[i].classList.remove('darktheme');
+        }
+    }
+
+    darkThemeSync() {
+        if (this.classList.contains('darktheme')) {
+            this.activateDarkTheme();
+        }
+    }
+
+    darkThemeClassManager() {
+        if (this.classList.contains('darktheme')) {
+            return `class="darktheme"`;
         }
     }
 }

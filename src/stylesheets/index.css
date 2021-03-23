@@ -54,3 +54,7 @@ body {
     line-height: var(--line-height-1);
     min-height: 100%;
 }
+
+body.darktheme {
+    background-color: var(--midnight);
+}

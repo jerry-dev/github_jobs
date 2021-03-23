@@ -25,7 +25,7 @@ export default class FullJobListing extends HTMLElement {
 
     connectedCallback() {
         this.render();
-        this.observer = eventBus;
+        this.observer.register(this);
     }
 
     render() {
@@ -36,14 +36,14 @@ export default class FullJobListing extends HTMLElement {
 
     html() {
         this.shadowRoot.innerHTML += `
-            <div class="componentContainer-1">
-                <company-header
+            <div id="footerComponentContainer-1">
+                <company-header ${this.darkThemeSync()}
                     companyLogo="${this.getAttribute('companyLogo')}"
                     companyName="${this.getAttribute('companyName')}"
                     companyURL="${this.getAttribute('companyURL')}"
                 ></company-header>
 
-                <job-details
+                <job-details ${this.darkThemeSync()}
                     companyURL="${this.getAttribute('companyURL')}"
                     createdAt="${this.getAttribute('createdAt')}"
                     employmentType="${this.getAttribute('employmentType')}"
@@ -57,13 +57,12 @@ export default class FullJobListing extends HTMLElement {
                     companyURL="${this.getAttribute('companyURL')}"
                     companyName="${this.getAttribute('companyName')}"
                     jobLocation="${this.getAttribute('jobLocation')}"
-                    >
-                </how-to-apply>
+                ></how-to-apply>
             </div>
 
-            <div class="componentContainer-2">
+            <div id="footerComponentContainer-2" ${this.darkThemeSync()}>
                 <div>
-                    <company-footer
+                    <company-footer ${this.darkThemeSync()}
                         companyLogo="${this.getAttribute('companyLogo')}"
                         companyName="${this.getAttribute('companyName')}"
                         companyURL="${this.getAttribute('companyURL')}"
@@ -91,7 +90,7 @@ export default class FullJobListing extends HTMLElement {
                     width: 100%;
                 }
 
-                .componentContainer-1 {
+                #footerComponentContainer-1 {
                     margin-left: auto;
                     margin-right: auto;
                     width: 65.765%;
@@ -102,7 +101,7 @@ export default class FullJobListing extends HTMLElement {
                     margin-bottom: 32px;
                 }
 
-                .componentContainer-2 {
+                #footerComponentContainer-2 {
                     background-color: var(--white);
                     height: auto;
                     left: 50%;
@@ -117,7 +116,11 @@ export default class FullJobListing extends HTMLElement {
                     width: 100vw;
                 }
 
-                .componentContainer-2 > div {
+                #footerComponentContainer-2.darktheme {
+                    background-color: var(--very-dark-blue);
+                }
+
+                #footerComponentContainer-2 > div {
                     width: 50vw;
                     max-width: 730px;
                     margin-left: auto;
@@ -131,11 +134,11 @@ export default class FullJobListing extends HTMLElement {
         this.shadowRoot.innerHTML += `
             <style>
                 @media screen and (max-width: 879px) {
-                    .componentContainer-1 {
+                    #footerComponentContainer-1 {
                         width: 100%;
                     }
 
-                    .componentContainer-2 > div {
+                    #footerComponentContainer-2 > div {
                         width: 75vw;
                         max-width: 879px;
                     }
@@ -148,7 +151,7 @@ export default class FullJobListing extends HTMLElement {
         this.shadowRoot.innerHTML += `
             <style>
                 @media screen and (max-width: 768px) {
-                    .componentContainer-2 > div {
+                    #footerComponentContainer-2 > div {
                         width: 89vw;
                         max-width: 768px;
                     }
@@ -165,12 +168,12 @@ export default class FullJobListing extends HTMLElement {
                         margin-bottom: 24px;
                     }
 
-                    .componentContainer-2 {
+                    #footerComponentContainer-2 {
                         padding-bottom: 25px;
                         padding-top: 23px;
                     }
 
-                    .componentContainer-2 > div {
+                    #footerComponentContainer-2 > div {
                         width: 85vw;
                         max-width: 375px;
                     }
@@ -185,7 +188,7 @@ export default class FullJobListing extends HTMLElement {
     }
 
     loadInAnimation() {
-        const container1 = this.shadowRoot.querySelector('.componentContainer-1');
+        const container1 = this.shadowRoot.querySelector('#footerComponentContainer-1');
 
         container1.animate([
             {
@@ -197,6 +200,18 @@ export default class FullJobListing extends HTMLElement {
                 transform: `translateX(0px)`
             }
         ], 400);
+    }
+
+    getEvent() {
+        return this.event;
+    }
+
+    getName() {
+        return this.name;
+    }
+
+    getInterests() {
+        return this.interests;
     }
 
     notificationReceiver(name, interest, theData) {
@@ -215,18 +230,17 @@ export default class FullJobListing extends HTMLElement {
 
     activateDarkTheme() {
         this.classList.add('darktheme');
+        this.shadowRoot.querySelector('#footerComponentContainer-2').classList.add('darktheme');
     }
 
     deactivateDarkTheme() {
         this.classList.remove('darktheme');
+        this.shadowRoot.querySelector('#footerComponentContainer-2').classList.remove('darktheme');
     }
 
     darkThemeSync() {
         if (this.classList.contains('darktheme')) {
-            this.shadowRoot.querySelector('company-header').classList.add('darktheme');
-            this.shadowRoot.querySelector('job-details').classList.add('darktheme');
-            this.shadowRoot.querySelector('how-to-apply').classList.add('darktheme');
-            this.shadowRoot.querySelector('company-footer').classList.add('darktheme');
+            return `class="darktheme"`;
         }
     }
 }
