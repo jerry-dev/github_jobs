@@ -1,11 +1,15 @@
 import eventBus from '../../../utils/EventBus.js';
 
 export default class FilterFormModal extends HTMLElement {
+    static get observedAttributes() {
+        return [ 'open' ];
+    }
+
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'filter-form-modal';
-        this.interests = [];
+        this.interests = [ 'dark-theme-activated', 'dark-theme-deactivated' ];
         this.observer = eventBus;
     }
 
@@ -31,10 +35,12 @@ export default class FilterFormModal extends HTMLElement {
         this.html();
         this.css();
         this.scripts();
+        this.observer.register(this);
     }
 
     html() {
         this.shadowRoot.innerHTML += `
+            <span id="mobileModalOverlay">
                 <div id="filterModal">
                     <span class="iconInputGroup">
                         <span>
@@ -50,6 +56,7 @@ export default class FilterFormModal extends HTMLElement {
                         </span>
                     </span>
                 </div>
+            </span>
         `;
     }
 
@@ -65,6 +72,9 @@ export default class FilterFormModal extends HTMLElement {
 
                 :host {
                     display: none;
+                }
+
+                #mobileModalOverlay {
                     background-color: var(--overlay-color);
                     height: 100vh;
                     position: fixed;
@@ -74,25 +84,10 @@ export default class FilterFormModal extends HTMLElement {
                     top: 0;
                     width: 100vw;
                     z-index: 999;
-                    animation-name: overlayLoadIn;
-                    animation-iteration-count: 1;
-                    animation-duration: 0.4s;
                 }
 
                 :host([open="true"]) {
                     display: block;
-                }
-
-                @keyframes overlayLoadIn {
-                    :host {
-                        0% {
-                            transform: scale(0);
-                        }
-
-                        100% {
-                            transform: scale(1);
-                        }
-                    }
                 }
 
                 #filterModal {
@@ -108,6 +103,14 @@ export default class FilterFormModal extends HTMLElement {
                     animation-name: modalLoadIn;
                     animation-iteration-count: 1;
                     animation-duration: 0.8s;
+                }
+
+                :host(.darktheme) #filterModal {
+                    background-color: var(--very-dark-blue);
+                }
+
+                :host(.darktheme) label {
+                    color: var(--white);
                 }
 
                 @keyframes overlayLoadIn {
@@ -177,7 +180,7 @@ export default class FilterFormModal extends HTMLElement {
                 }
 
                 .iconInputGroup:nth-child(2) input {
-                    visibility: hidden;
+                    display: none;
                 }
 
                 .iconInputGroup:nth-child(2) label {
@@ -195,10 +198,13 @@ export default class FilterFormModal extends HTMLElement {
                     position: relative;
                     margin-right: 16px;
                     left: 0px;
-                    Xtop: 10px;
                     width: 24px;
                     height: 24px;
                     background-color: var(--opaque-very-dark-blue-1);
+                }
+
+                :host(.darktheme) .iconInputGroup:nth-child(2) label::before {
+                    background-color: var(--opaque-white-2);
                 }
 
                 .iconInputGroup:nth-child(2) input:checked + label::before {
@@ -206,6 +212,10 @@ export default class FilterFormModal extends HTMLElement {
                     background-image: url('../src/assets/icons/desktop/icon-check.svg');
                     background-repeat: no-repeat;
                     background-position: center;
+                }
+
+                :host(.darktheme) .iconInputGroup:nth-child(2) input:checked + label::before {
+                    background-color: var(--blue-1);
                 }
 
                 .iconInputGroup:nth-child(2) button {
@@ -225,6 +235,7 @@ export default class FilterFormModal extends HTMLElement {
     scripts() {
         this.clickEvents();
         this.observer.register(this);
+        this.animateIn();
     }
 
     closeSelf() {
@@ -234,14 +245,34 @@ export default class FilterFormModal extends HTMLElement {
     clickEvents() {
         this.shadowRoot.addEventListener('click', (event) => {
             const { tagName } = event.target;
-            console.log(tagName);
+            const { id } = event.target;
 
             switch (tagName) {
                 case 'BUTTON':
                     this.publishFormDetails();
                     this.closeSelf();
+                    break;
+                case 'LABEL':
+                    this.checkBoxManager();
+                    break;
+            }
+
+            switch (id) {
+                case 'mobileModalOverlay':
+                    this.closeSelf();
+                    break;
             }
         });
+    }
+
+    checkBoxManager() {
+        const theCheckBox = this.shadowRoot.querySelectorAll('.iconInputGroup')[1].querySelector('span > input');
+            
+        if (!theCheckBox.checked) {
+            theCheckBox.checked = true;
+        } else {
+            theCheckBox.checked = false;
+        }
     }
 
     publishFormDetails() {
@@ -256,6 +287,64 @@ export default class FilterFormModal extends HTMLElement {
         }
 
         this.observer.publish('filterFormModalSubmit', filterCriteria);
+    }
+
+    notificationReceiver(name, interest, theData) {
+        console.log(`${name} has received the notification.`);
+        console.log(`The event "${interest}" took place.`);
+
+        switch (interest) {
+            case 'dark-theme-activated':
+                this.activateDarkTheme();
+                break;
+            case 'dark-theme-deactivated':
+                this.deactivateDarkTheme();
+                break;
+        }
+    }
+
+    activateDarkTheme() {
+        this.classList.add('darktheme');
+    }
+
+    deactivateDarkTheme() {
+        this.classList.remove('darktheme');
+    }
+
+    animateIn() {
+        this.shadowRoot.innerHTML += `
+            <style>
+                #mobileModalOverlay {
+                    animation-duration: 0.2s;
+                    animation-iteration-count: 1;
+                    animation-name: loadIn;
+                }
+
+                @keyframes loadIn {
+                    0% {
+                        opacity: 0.5;
+                    }
+                    100% {
+                        opacity: 1;
+                    }
+                }
+
+                #filterModal {
+                    animation-duration: 0.6s;
+                    animation-iteration-count: 1;
+                    animation-name: dropIn;
+                }
+
+                @keyframes dropIn {
+                    0%, 50% {
+                        transform: translateY(-500px);
+                    }
+                    100% {
+                        transform: translateY(0);
+                    }
+                }
+            </style>
+        `;
     }
 }
 

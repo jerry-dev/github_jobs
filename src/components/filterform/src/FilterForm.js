@@ -6,7 +6,7 @@ export default class FilterForm extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'filter-form';
-        this.interests = [ 'filterFormModalSubmit', 'dark-theme-activated', 'dark-theme-deactivated' ]
+        this.interests = [ 'filterFormModalSubmit', 'dark-theme-activated', 'dark-theme-deactivated' ];
         this.observer = eventBus;
     }
 
@@ -62,7 +62,7 @@ export default class FilterForm extends HTMLElement {
                     </span>
                 </span>
             </div>
-            <filter-form-modal open="false"></filter-form-modal>
+            <filter-form-modal open="false" ${this.darkThemeClassManager()}></filter-form-modal>
         `;
     }
 
@@ -86,6 +86,10 @@ export default class FilterForm extends HTMLElement {
 
                 :host(.darktheme) label {
                     color: var(--white);
+                }
+
+                :host(.darktheme) #filterIcon {
+                    content:url("../src/assets/icons/mobile/icon-filter-white.svg");
                 }
 
                 .mobileIcons {
@@ -214,11 +218,19 @@ export default class FilterForm extends HTMLElement {
                     background-color: var(--opaque-very-dark-blue-1);
                 }
 
+                :host(.darktheme) .iconInputGroup:nth-child(3) label::before {
+                    background-color: var(--opaque-white-2);
+                }
+
                 .iconInputGroup:nth-child(3) input:checked + label::before {
                     background-color: var(--blue-1);
                     background-image: url('../src/assets/icons/desktop/icon-check.svg');
                     background-repeat: no-repeat;
                     background-position: center;
+                }
+
+                :host(.darktheme) .iconInputGroup:nth-child(3) input:checked + label::before {
+                    background-color: var(--blue-1);
                 }
 
                 .iconInputGroup:nth-child(3) label {
@@ -495,7 +507,7 @@ export default class FilterForm extends HTMLElement {
                 this.activateDarkTheme();
                 break;
             case 'dark-theme-deactivated':
-                this.deactivateDarkTheme()
+                this.deactivateDarkTheme();
                 break;
         }
     }
@@ -506,6 +518,12 @@ export default class FilterForm extends HTMLElement {
 
     deactivateDarkTheme() {
         this.classList.remove('darktheme');
+    }
+
+    darkThemeClassManager() {
+        if (this.classList.contains('darktheme')) {
+            return `class="darktheme"`;
+        }
     }
 }
 

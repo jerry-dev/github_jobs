@@ -61,7 +61,7 @@ export default class FullJobListing extends HTMLElement {
             </div>
 
             <div id="footerComponentContainer-2" ${this.darkThemeSync()}>
-                <div>
+                <div id="companyFooterLayer-2">
                     <company-footer ${this.darkThemeSync()}
                         companyLogo="${this.getAttribute('companyLogo')}"
                         companyName="${this.getAttribute('companyName')}"
@@ -120,7 +120,7 @@ export default class FullJobListing extends HTMLElement {
                     background-color: var(--very-dark-blue);
                 }
 
-                #footerComponentContainer-2 > div {
+                #footerComponentContainer-2 > #companyFooterLayer-2 {
                     width: 50vw;
                     max-width: 730px;
                     margin-left: auto;
@@ -138,7 +138,7 @@ export default class FullJobListing extends HTMLElement {
                         width: 100%;
                     }
 
-                    #footerComponentContainer-2 > div {
+                    #footerComponentContainer-2 > #companyFooterLayer-2 {
                         width: 75vw;
                         max-width: 879px;
                     }
@@ -151,7 +151,7 @@ export default class FullJobListing extends HTMLElement {
         this.shadowRoot.innerHTML += `
             <style>
                 @media screen and (max-width: 768px) {
-                    #footerComponentContainer-2 > div {
+                    #footerComponentContainer-2 > #companyFooterLayer-2 {
                         width: 89vw;
                         max-width: 768px;
                     }
@@ -173,7 +173,7 @@ export default class FullJobListing extends HTMLElement {
                         padding-top: 23px;
                     }
 
-                    #footerComponentContainer-2 > div {
+                    #footerComponentContainer-2 > #companyFooterLayer-2 {
                         width: 85vw;
                         max-width: 375px;
                     }

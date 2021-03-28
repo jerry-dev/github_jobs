@@ -1,5 +1,5 @@
 import createdAt from '../../../utils/createdAt.js';
-import URLManager from '../../../utils/URLManager.js';
+// import URLManager from '../../../utils/URLManager.js';
 import eventBus from '../../../utils/EventBus.js';
 
 export default class JobDetails extends HTMLElement {

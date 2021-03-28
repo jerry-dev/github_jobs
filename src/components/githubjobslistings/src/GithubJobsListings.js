@@ -18,7 +18,13 @@ export default class GithubJobsListings extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'github-jobs-listings';
-        this.interests = ['data-fetched', 'loaded-more', 'filter-searched', 'dark-theme-activated', 'dark-theme-deactivated'];
+        this.interests = [
+            'data-fetched',
+            'loaded-more',
+            'filter-searched',
+            'dark-theme-activated',
+            'dark-theme-deactivated'
+        ];
         this.currentNumberOfBuckets = 0;
         this.numberOfListingsShown = 0;
         this.listingsShownById = [];
@@ -98,6 +104,7 @@ export default class GithubJobsListings extends HTMLElement {
             }
 
             if (loopCommands.toSkip) {
+                console.log('Skipping');
                 continue;
             } else {
                 markup +=
@@ -134,7 +141,7 @@ export default class GithubJobsListings extends HTMLElement {
                 this.currentNumberOfBuckets++;
         } else if (shouldFilter) {
             this.clearListingContainer();
-            this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML += markup;
+            this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML = markup;
             this.currentNumberOfBuckets++;
         }
         this.darkThemeSync();

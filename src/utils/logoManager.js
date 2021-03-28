@@ -1,8 +1,8 @@
 const logoManager = function(url) {
     if (url === 'null') {
-        return `<img rel="icon" src="../../src/assets/icons/desktop/dev-svgrepo-com.svg">`;
+        return `<img rel="icon" class="icon" src="../../src/assets/icons/desktop/icons8-github-darktheme.svg">`
     } else {
-        return `<img rel="icon" src=${url}>`;
+        return `<img rel="icon" class="icon" src=${url}>`;
     }
 }
 

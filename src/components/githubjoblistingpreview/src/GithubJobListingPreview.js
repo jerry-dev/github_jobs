@@ -31,7 +31,7 @@ export default class GithubJobListingPreview extends HTMLElement {
         this.shadowRoot.innerHTML += `
             <div class="listingPreviewInnerContainer">
                 <section id="top">
-                    ${logoManager(this.getAttribute('companyLogo'))}
+                    ${logoManager(this.getAttribute('companyLogo'), true)}
                     <span class="metaDataContainer">
                         <small class="metaData">${createdAt(this.getAttribute('createdAt'))} .</small>
                         <small class="metaData">${this.getAttribute('employmentType')}</small>
@@ -57,6 +57,7 @@ export default class GithubJobListingPreview extends HTMLElement {
 
                 :host {
                     background-color: var(--white);
+                    border-radius: 6px;
                     cursor: pointer;
                     display: block;
                     height: 100%;

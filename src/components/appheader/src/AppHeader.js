@@ -1,9 +1,13 @@
 import ThemeToggle from '../../themetoggle/src/ThemeToggle.js';
+import eventBus from '../../../utils/EventBus.js';
 
 export default class AppHeader extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.name = `app-header`;
+        this.interests = [];
+        this.observer = eventBus;
     }
 
     connectedCallback() {
@@ -15,12 +19,14 @@ export default class AppHeader extends HTMLElement {
         this.defaultCSS();
         this.tabletLayoutCSS();
         this.mobiletLayoutCSS();
+        this.scripts();
+        this.observer.register(this);
     }
 
     html() {
         this.shadowRoot.innerHTML += `
             <div id="headerInnerContainer">
-                <a href="/">
+                <a href="/" id="rootNavigator">
                     <img class="logo" src="../src/assets/icons/desktop/logo.svg">
                 </a>
                 <theme-toggle nightThemeOn=false></theme-toggle>
@@ -79,6 +85,25 @@ export default class AppHeader extends HTMLElement {
                 }
             </style>
         `;
+    }
+
+    scripts() {
+        this.navigateToRoot();
+    }
+
+    getName() {
+        return this.name;
+    }
+
+    getInterests() {
+        return this.interests;
+    }
+
+    navigateToRoot() {
+        this.shadowRoot.querySelector('#rootNavigator').addEventListener('click', (event) => {
+            event.preventDefault();
+            this.observer.publish('navigate-to-root');
+        });
     }
 }
 

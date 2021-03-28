@@ -19,7 +19,14 @@ class GithubJobsApp extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'github-jobs-app';
-        this.interests = ['load-more', 'filter-search', 'listing-clicked', 'dark-theme-activated', 'dark-theme-deactivated'];
+        this.interests = [
+            'load-more',
+            'filter-search',
+            'listing-clicked',
+            'dark-theme-activated',
+            'dark-theme-deactivated',
+            'navigate-to-root'
+        ];
         this.event = '';
         this.observer = eventBus;
     }
@@ -94,10 +101,12 @@ class GithubJobsApp extends HTMLElement {
         this.route = this.shadowRoot.querySelector('#route');
         this.router = new Navigo(window.location.origin, { hash: true });
 
-        this.router.on("/", () => {
-            this.route.innerHTML = `<github-jobs-listings ${this.darkThemeSync()} listingsPreviewsPerPage=12></github-jobs-listings>`;
-            this.getListingData();
-        });
+        this.router.on(
+            "/", () => {
+                    this.route.innerHTML = `<github-jobs-listings ${this.darkThemeSync()} listingsPreviewsPerPage=12></github-jobs-listings>`;
+                    this.getListingData();
+                }
+            );
 
         this.router.on("/selectedListing", () => {
                 const details = JSON.parse(sessionStorage.getItem('details'));
@@ -120,8 +129,8 @@ class GithubJobsApp extends HTMLElement {
     }
 
     cachedFetch(url, options) {
-        // Expires in three hours
-        let expiration = 60 * 60 * 3;
+        // Expires in two hours
+        let expiration = 60 * 60 * 2;
 
         switch (options) {
             case 'number':
@@ -135,23 +144,28 @@ class GithubJobsApp extends HTMLElement {
 
         let cacheKey = url;
         let cached = localStorage.getItem(cacheKey);
+        let whenCached = localStorage.getItem(`${cacheKey}:timestamp`);
+
         (!cached)
             ? console.log(`The data is not from the local cache`)
             : console.log(`The data came from the local cache`);
-        let whenCached = localStorage.getItem(`${cacheKey}:timestamp`);
+        
         if (cached !== null && whenCached !== null) {
             if (options.loadMore || options.search) {
+                // Does return the searched data
                 return eval(cached);
             }
             let age = (Date.now() - whenCached) / 1000;
             if (age < expiration) {
                 return eval(cached);
             } else {
+                console.log(`The data has reached it's expiration date.`);
+                console.log(`Removing the data from local cache.`);
                 localStorage.removeItem(cacheKey);
                 localStorage.removeItem(`${cacheKey}:timestamp`);
             }
         }
-
+        
         fetch(url, options)
             .then((response) => {
                 if (response.status === 200) {
@@ -159,6 +173,7 @@ class GithubJobsApp extends HTMLElement {
                     if (contentType && (contentType.match(/application\/json/i) ||
                     contentType.match(/text\//i))) {
                         response.clone().text().then((content) => {
+                            console.log(`Saving the fetched data to the local cache.`);
                             localStorage.setItem(cacheKey, content);
                             localStorage.setItem(`${cacheKey}:timestamp`, Date.now());
                         });
@@ -173,9 +188,6 @@ class GithubJobsApp extends HTMLElement {
         const options = {
             // Expires in seven hours
             seconds: 60 * 60 * 7,
-            headers: new Headers({
-                "Access-Control-Allow-Origin": window.location.origin
-            })
         }
 
         let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
@@ -221,6 +233,8 @@ class GithubJobsApp extends HTMLElement {
             case 'dark-theme-deactivated':
                 this.deactivateDarkTheme()
                 break;
+            case 'navigate-to-root':
+                this.router.navigate();
         }
     }
 
