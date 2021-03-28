@@ -27,7 +27,7 @@ class GithubJobsApp extends HTMLElement {
             'dark-theme-deactivated',
             'navigate-to-root'
         ];
-        this.event = '';
+        
         this.observer = eventBus;
     }
 
@@ -105,8 +105,7 @@ class GithubJobsApp extends HTMLElement {
             "/", () => {
                     this.route.innerHTML = `<github-jobs-listings ${this.darkThemeSync()} listingsPreviewsPerPage=12></github-jobs-listings>`;
                     this.getListingData();
-                }
-            );
+                });
 
         this.router.on("/selectedListing", () => {
                 const details = JSON.parse(sessionStorage.getItem('details'));
@@ -152,7 +151,6 @@ class GithubJobsApp extends HTMLElement {
         
         if (cached !== null && whenCached !== null) {
             if (options.loadMore || options.search) {
-                // Does return the searched data
                 return eval(cached);
             }
             let age = (Date.now() - whenCached) / 1000;
@@ -191,12 +189,7 @@ class GithubJobsApp extends HTMLElement {
         }
 
         let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
-        this.setEvent('data-fetched', theData);
-    }
-
-    setEvent(newEvent, theData) {
-        this.event = newEvent;
-        this.observer.publish(this.getEvent(), theData);
+        this.observer.publish('data-fetched', theData);
     }
 
     getEvent() {
@@ -235,6 +228,7 @@ class GithubJobsApp extends HTMLElement {
                 break;
             case 'navigate-to-root':
                 this.router.navigate();
+                this.getListingData();
         }
     }
 
@@ -243,7 +237,7 @@ class GithubJobsApp extends HTMLElement {
             loadMore: true
         }
         let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
-        this.setEvent('loaded-more', theData);
+        this.observer.publish('loaded-more', theData);
     }
 
     filterSearch(filterCriteria) {
@@ -252,7 +246,7 @@ class GithubJobsApp extends HTMLElement {
         }
         let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
         theData.filterCriteria = filterCriteria;
-        this.setEvent('filter-searched', theData);
+        this.observer.publish('filter-searched', theData);
     }
 
     teleportToTheTop() {

@@ -55,6 +55,7 @@ export default class GithubJobsListings extends HTMLElement {
                 this.loadMore(theData, true);
                 break;
             case 'filter-searched':
+                console.log(`GHJobsListing case: filter-searched`);
                 this.html(theData, true);
                 break;
             case 'dark-theme-activated':
@@ -80,15 +81,10 @@ export default class GithubJobsListings extends HTMLElement {
         }
 
         let markupLength = 0;
-        setTimeout(() => {
-            const loadMoreButton = this.shadowRoot.querySelector('load-more-button');
-            if (loadMoreButton.style.display === 'none') {
-                loadMoreButton.style.display = 'block';
-            }
-        }, 1);
+        this.bringBackLoadMoreButton();
 
         this.filterCriteria = this.extractFilterCriteria(shouldFilter, theData);
-        delete theData.filterCriteria;
+        theData.filterCriteria;
 
         let markup = ``;
         
@@ -104,9 +100,8 @@ export default class GithubJobsListings extends HTMLElement {
             }
 
             if (loopCommands.toSkip) {
-                console.log('Skipping');
                 continue;
-            } else {
+            } else if (!loopCommands.toSkip) {
                 markup +=
                 `<github-job-listing-preview
                     companyLogo="${theData[i].company_logo}"
@@ -144,6 +139,7 @@ export default class GithubJobsListings extends HTMLElement {
             this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML = markup;
             this.currentNumberOfBuckets++;
         }
+
         this.darkThemeSync();
     }
 
@@ -205,6 +201,15 @@ export default class GithubJobsListings extends HTMLElement {
                 }
             </style>
         `;
+    }
+
+    bringBackLoadMoreButton() {
+        setTimeout(() => {
+            const loadMoreButton = this.shadowRoot.querySelector('load-more-button');
+            if (loadMoreButton.style.display === 'none') {
+                loadMoreButton.style.display = 'block';
+            }
+        }, 1);
     }
 
     scripts() {
