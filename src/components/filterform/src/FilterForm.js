@@ -6,7 +6,11 @@ export default class FilterForm extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.name = 'filter-form';
-        this.interests = [ 'filterFormModalSubmit', 'dark-theme-activated', 'dark-theme-deactivated' ];
+        this.interests = [
+            'filterFormModalSubmit',
+            'dark-theme-activated',
+            'dark-theme-deactivated'
+        ];
         this.observer = eventBus;
     }
 

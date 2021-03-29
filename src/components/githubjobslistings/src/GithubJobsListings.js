@@ -55,7 +55,6 @@ export default class GithubJobsListings extends HTMLElement {
                 this.loadMore(theData, true);
                 break;
             case 'filter-searched':
-                console.log(`GHJobsListing case: filter-searched`);
                 this.html(theData, true);
                 break;
             case 'dark-theme-activated':
@@ -132,7 +131,6 @@ export default class GithubJobsListings extends HTMLElement {
                     ${markup}
                 </div>
                 <load-more-button></load-more-button>`;
-            
                 this.currentNumberOfBuckets++;
         } else if (shouldFilter) {
             this.clearListingContainer();

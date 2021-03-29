@@ -61,7 +61,7 @@ export default class GithubJobListingPreview extends HTMLElement {
                     cursor: pointer;
                     display: block;
                     height: 100%;
-                    width: 100%;
+                    min-width: 100%;
                 }
 
                 :host(.darktheme) {
