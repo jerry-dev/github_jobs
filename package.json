@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "browserSync": "browser-sync start --index public/index.html --browser brave --server --files=src",
-    "browserSyncDist": "browser-sync start --index dist/index.html --browser brave --server --files=src",
+    "browserSync": "browser-sync start --index public/index.html --browser chrome --server --files=src",
+    "browserSyncDist": "browser-sync start --index dist/index.html --browser chrome --server --files=src",
     "build-html": "cp public/index.html dist/",
     "build-assets": "cp -r ./src/assets/ dist/src",
     "build-rollup": "./node_modules/.bin/rollup src/components/app/src/GithubJobsApp.js --file dist/src/components/app/GithubJobsApp.js --format umd --name GithubJobsApp -m",
