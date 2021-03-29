@@ -389,6 +389,7 @@ export default class FilterForm extends HTMLElement {
     scripts() {
         this.filterModalOpenEvent();
         this.clickEvents();
+        this.submitOnEnterEvent();
         this.observer.register(this);
     }
 
@@ -454,6 +455,23 @@ export default class FilterForm extends HTMLElement {
                         this.checkBoxManager()
                     }
                     break;
+            }
+        });
+    }
+
+    submitOnEnterEvent() {
+        const input1 = this.shadowRoot.querySelectorAll('.iconInputGroup')[0].querySelector('span > input');
+        const input2 = this.shadowRoot.querySelectorAll('.iconInputGroup')[1].querySelector('span > input');
+
+        input1.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                this.publishFormDetails();
+            }
+        });
+
+        input2.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                this.publishFormDetails();
             }
         });
     }

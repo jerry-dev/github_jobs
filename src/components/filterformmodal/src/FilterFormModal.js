@@ -236,6 +236,7 @@ export default class FilterFormModal extends HTMLElement {
         this.clickEvents();
         this.observer.register(this);
         this.animateIn();
+        this.submitOnEnterEvent();
     }
 
     closeSelf() {
@@ -345,6 +346,25 @@ export default class FilterFormModal extends HTMLElement {
                 }
             </style>
         `;
+    }
+
+    submitOnEnterEvent() {
+        const input1 = this.shadowRoot.querySelectorAll('.iconInputGroup')[0].querySelector('span > input');
+        const input2 = this.shadowRoot.querySelectorAll('.iconInputGroup')[1].querySelector('span > input');
+
+        input1.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                this.publishFormDetails();
+                this.closeSelf();
+            }
+        });
+
+        input2.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                this.publishFormDetails();
+                this.closeSelf();
+            }
+        });
     }
 }
 

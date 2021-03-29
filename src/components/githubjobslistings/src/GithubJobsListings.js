@@ -266,7 +266,7 @@ export default class GithubJobsListings extends HTMLElement {
         const startingAt = this.numberOfListingsShown;
         let markupLength = 0;
 
-        for (let i = startingAt; markupLength < listingPerPage; i++) {
+        for (let i = startingAt; markupLength !== listingPerPage; i++) {
             if (this.numberOfListingsShown >= 50 || i >= 50) {
                 this.removeLoadMoreButton();
                 break;
