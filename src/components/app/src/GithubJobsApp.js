@@ -5,16 +5,6 @@ import eventBus from '../../../utils/EventBus.js';
 import Navigo from '../../../utils/navigo.es.js';
 
 class GithubJobsApp extends HTMLElement {
-    static get observedAttributes() {
-        return ['apiURL'];
-    }
-
-    attributeChangedCallback(attrName, oldValue, newValue) {
-		if (oldValue !== newValue) {
-			this[attrName] = this.getAttribute(attrName);
-		}
-    }
-
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
@@ -186,9 +176,12 @@ class GithubJobsApp extends HTMLElement {
         const options = {
             // Expires in seven hours
             seconds: 60 * 60 * 7,
+            headers: new Headers({
+                "Content-Type": "application/json"
+            })
         }
 
-        let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
+        let theData = this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
         this.observer.publish('data-fetched', theData);
     }
 
@@ -236,7 +229,7 @@ class GithubJobsApp extends HTMLElement {
         const options = {
             loadMore: true
         }
-        let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
+        let theData = this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
         this.observer.publish('loaded-more', theData);
     }
 
@@ -244,7 +237,7 @@ class GithubJobsApp extends HTMLElement {
         const options = {
             search: true
         }
-        let theData = this.cachedFetch(this.getAttribute('apiURL'), options);
+        let theData = this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
         theData.filterCriteria = filterCriteria;
         this.observer.publish('filter-searched', theData);
     }
