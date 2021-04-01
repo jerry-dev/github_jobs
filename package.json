@@ -6,9 +6,9 @@
   "scripts": {
     "browserSync": "browser-sync start --index public/index.html --browser chrome --server --files=src",
     "browserSyncDist": "browser-sync start --index dist/index.html --browser chrome --server --files=src",
-    "build-html": "cp public/index.html dist/",
+    "build-html": "cp public/index.html dist",
     "build-assets": "cp -r ./src/assets/ dist/src",
-    "build-components": "cp -r ./src/components dist/src/",
+    "build-components": "cp -r ./src/components dist/src",
     "build-rollup": "./node_modules/.bin/rollup src/components/app/src/GithubJobsApp.js --file dist/src/components/app/GithubJobsApp.js --format umd --name GithubJobsApp -m",
     "build-terser": "./node_modules/.bin/terser ./dist/src/components/app/GithubJobsApp.js -o ./dist/src/components/app/GithubJobsApp.js -m",
     "build-app": "npm run build-html && npm run build-assets && npm run build-components && npm run build-rollup && npm run build-terser"
