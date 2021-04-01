@@ -159,12 +159,13 @@ class GithubJobsApp extends HTMLElement {
                         response.clone().text().then((content) => {
                             localStorage.setItem(cacheKey, content);
                             localStorage.setItem(`${cacheKey}:timestamp`, Date.now());
+                            this.router.navigate();
                         });
                     }
                 }
                 // return response;
                 // Experimental
-                this.observer.publish('data-fetched', response);
+                // this.observer.publish('data-fetched', response);
             }
         )
     }
