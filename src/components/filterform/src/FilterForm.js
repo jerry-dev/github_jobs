@@ -336,7 +336,7 @@ export default class FilterForm extends HTMLElement {
     mobileLayoutCSS() {
         this.shadowRoot.innerHTML += `
             <style>
-                @media screen and (max-width: 375px) {
+                @media screen and (max-width: 414px) {
                     #searchIcon1 {
                         display: none;
                     }

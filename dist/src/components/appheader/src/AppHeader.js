@@ -77,7 +77,7 @@ export default class AppHeader extends HTMLElement {
     mobiletLayoutCSS() {
         this.shadowRoot.innerHTML += `
             <style>
-                @media screen and (max-width: 375px) {
+                @media screen and (max-width: 414px) {
                     :host {
                         padding-bottom: 32px;
                         padding-top: 32px;

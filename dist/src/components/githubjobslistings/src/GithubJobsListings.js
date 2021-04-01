@@ -187,7 +187,7 @@ export default class GithubJobsListings extends HTMLElement {
     mobileLayoutCSS() {
         this.shadowRoot.innerHTML += `
             <style>
-                @media screen and (max-width: 375px) {
+                @media screen and (max-width: 414px) {
                     #jobListingsInnerContainer {
                         display: grid;
                         grid-template-columns: 1fr;

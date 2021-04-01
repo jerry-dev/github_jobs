@@ -91,7 +91,7 @@ export default class HowToApply extends HTMLElement {
     mobileLayoutCSS() {
         this.shadowRoot.innerHTML += `
             <style>
-                @media screen and (max-width: 375px) {
+                @media screen and (max-width: 414px) {
                     :host {
                         background-image: url('../src/assets/icons/mobile/bg-pattern-detail-footer.svg');
                     }

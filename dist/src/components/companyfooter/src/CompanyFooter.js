@@ -113,7 +113,7 @@ export default class CompanyFooter extends HTMLElement {
     mobileLayoutCSS() {
         this.shadowRoot.innerHTML += `
             <style>
-                @media screen and (max-width: 375px) {
+                @media screen and (max-width: 414px) {
                     *, *::before, *::after { padding: 0; margin: 0; }
 
                     .componentContainer {

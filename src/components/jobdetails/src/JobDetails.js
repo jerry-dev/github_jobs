@@ -204,7 +204,7 @@ export default class JobDetails extends HTMLElement {
     mobileLayoutCSS() {
         this.shadowRoot.innerHTML += `
             <style>
-                @media screen and (max-width: 375px) {
+                @media screen and (max-width: 414px) {
                     #jobDetailsInnerContainer {
                         margin-top: 40px;
                         width: 86.066%;

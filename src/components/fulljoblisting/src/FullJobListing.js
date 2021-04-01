@@ -163,7 +163,7 @@ export default class FullJobListing extends HTMLElement {
     mobileLayoutCSS() {
         this.shadowRoot.innerHTML += `
             <style>
-                @media screen and (max-width: 375px) {
+                @media screen and (max-width: 414px) {
                     company-header {
                         margin-bottom: 24px;
                     }
