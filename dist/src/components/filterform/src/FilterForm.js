@@ -518,9 +518,6 @@ export default class FilterForm extends HTMLElement {
     }
 
     notificationReceiver(name, interest, theData) {
-        console.log(`${name} has received the notification.`);
-        console.log(`The event "${interest}" took place.`);
-
         switch (interest) {
             case 'filterFormModalSubmit':
                 this.publishModalFormDetails(theData);

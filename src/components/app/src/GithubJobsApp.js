@@ -134,10 +134,6 @@ class GithubJobsApp extends HTMLElement {
         let cacheKey = url;
         let cached = localStorage.getItem(cacheKey);
         let whenCached = localStorage.getItem(`${cacheKey}:timestamp`);
-
-        (!cached)
-            ? console.log(`The data is not from the local cache`)
-            : console.log(`The data came from the local cache`);
         
         if (cached !== null && whenCached !== null) {
             if (options.loadMore || options.search) {
@@ -147,8 +143,6 @@ class GithubJobsApp extends HTMLElement {
             if (age < expiration) {
                 return eval(cached);
             } else {
-                console.log(`The data has reached it's expiration date.`);
-                console.log(`Removing the data from local cache.`);
                 localStorage.removeItem(cacheKey);
                 localStorage.removeItem(`${cacheKey}:timestamp`);
             }
@@ -161,7 +155,6 @@ class GithubJobsApp extends HTMLElement {
                     if (contentType && (contentType.match(/application\/json/i) ||
                     contentType.match(/text\//i))) {
                         response.clone().text().then((content) => {
-                            console.log(`Saving the fetched data to the local cache.`);
                             localStorage.setItem(cacheKey, content);
                             localStorage.setItem(`${cacheKey}:timestamp`, Date.now());
                         });
@@ -198,8 +191,6 @@ class GithubJobsApp extends HTMLElement {
     }
 
     notificationReceiver(name, interest, theData) {
-        console.log(`${name} has received the notification.`);
-        console.log(`The event "${interest}" took place.`);
 
         switch (interest) {
             case 'load-more':

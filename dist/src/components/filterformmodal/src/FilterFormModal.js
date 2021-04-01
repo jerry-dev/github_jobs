@@ -291,9 +291,6 @@ export default class FilterFormModal extends HTMLElement {
     }
 
     notificationReceiver(name, interest, theData) {
-        console.log(`${name} has received the notification.`);
-        console.log(`The event "${interest}" took place.`);
-
         switch (interest) {
             case 'dark-theme-activated':
                 this.activateDarkTheme();
