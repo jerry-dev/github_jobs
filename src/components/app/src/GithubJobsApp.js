@@ -93,8 +93,8 @@ class GithubJobsApp extends HTMLElement {
 
         this.router.on(
             "/", () => {
-                    this.route.innerHTML = `<github-jobs-listings ${this.darkThemeSync()} listingsPreviewsPerPage=12></github-jobs-listings>`;
-                    this.getListingData();
+                this.route.innerHTML = `<github-jobs-listings ${this.darkThemeSync()} listingsPreviewsPerPage=12></github-jobs-listings>`;
+                this.getListingData();
                 });
 
         this.router.on("/selectedListing", () => {
@@ -141,7 +141,9 @@ class GithubJobsApp extends HTMLElement {
             }
             let age = (Date.now() - whenCached) / 1000;
             if (age < expiration) {
-                return eval(cached);
+                // return eval(cached);
+                // Experimental
+                this.observer.publish('data-fetched', JSON.parse(cached));
             } else {
                 localStorage.removeItem(cacheKey);
                 localStorage.removeItem(`${cacheKey}:timestamp`);
@@ -160,7 +162,9 @@ class GithubJobsApp extends HTMLElement {
                         });
                     }
                 }
-                return response;
+                // return response;
+                // Experimental
+                this.observer.publish('data-fetched', response);
             }
         )
     }
@@ -174,8 +178,10 @@ class GithubJobsApp extends HTMLElement {
             })
         }
 
-        let theData = this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
-        this.observer.publish('data-fetched', theData);
+        // Experimental
+        this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
+        // let theData = this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
+        // this.observer.publish('data-fetched', theData);
     }
 
     getEvent() {
