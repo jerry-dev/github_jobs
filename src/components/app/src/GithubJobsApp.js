@@ -137,13 +137,20 @@ class GithubJobsApp extends HTMLElement {
         
         if (cached !== null && whenCached !== null) {
             if (options.loadMore || options.search) {
-                return eval(cached);
+                this.observer.publish('loaded-more', JSON.parse(cached));
+                return;
+            }
+            if (options.filterSearch) {
+                cached = JSON.parse(cached);
+                cached.filterCriteria = options.filterCriteria;
+                this.observer.publish('filter-searched', cached);
+                
+                return;
             }
             let age = (Date.now() - whenCached) / 1000;
             if (age < expiration) {
-                // return eval(cached);
-                // Experimental
                 this.observer.publish('data-fetched', JSON.parse(cached));
+                return;
             } else {
                 localStorage.removeItem(cacheKey);
                 localStorage.removeItem(`${cacheKey}:timestamp`);
@@ -159,15 +166,17 @@ class GithubJobsApp extends HTMLElement {
                         response.clone().text().then((content) => {
                             localStorage.setItem(cacheKey, content);
                             localStorage.setItem(`${cacheKey}:timestamp`, Date.now());
-                            this.router.navigate();
+
+                            const cached = localStorage.getItem(cacheKey);
+                            return this.observer.publish('data-fetched', JSON.parse(cached));
                         });
                     }
                 }
-                // return response;
-                // Experimental
-                // this.observer.publish('data-fetched', response);
             }
         )
+
+        // FAKE FETCH
+        // return this.observer.publish('data-fetched', {});
     }
 
     getListingData() {
@@ -178,11 +187,8 @@ class GithubJobsApp extends HTMLElement {
                 "Content-Type": "application/json"
             })
         }
-
-        // Experimental
+        
         this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
-        // let theData = this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
-        // this.observer.publish('data-fetched', theData);
     }
 
     getEvent() {
@@ -227,17 +233,16 @@ class GithubJobsApp extends HTMLElement {
         const options = {
             loadMore: true
         }
-        let theData = this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
-        this.observer.publish('loaded-more', theData);
+        this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
     }
 
     filterSearch(filterCriteria) {
         const options = {
-            search: true
+            filterSearch: true,
+            filterCriteria: filterCriteria
         }
-        let theData = this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
-        theData.filterCriteria = filterCriteria;
-        this.observer.publish('filter-searched', theData);
+
+        this.cachedFetch("https://fast-anchorage-00022.herokuapp.com/", options);
     }
 
     teleportToTheTop() {

@@ -33,6 +33,7 @@ export default class GithubJobsListings extends HTMLElement {
 
     connectedCallback() {
         this.observer.register(this);
+        this.render();
     }
 
     getName() {
@@ -46,13 +47,13 @@ export default class GithubJobsListings extends HTMLElement {
     notificationReceiver(name, interest, theData) {
         switch (interest) {
             case 'data-fetched':
-                this.render(theData);
+                this.hydrateMarkup(theData);
                 break;
             case 'loaded-more':
                 this.loadMore(theData, true);
                 break;
             case 'filter-searched':
-                this.html(theData, true);
+                this.hydrateMarkup(theData, true);
                 break;
             case 'dark-theme-activated':
                 this.activateDarkTheme();
@@ -63,13 +64,24 @@ export default class GithubJobsListings extends HTMLElement {
         }
     }
 
-    render(theData) {
-        this.html(theData);
+    render() {
+        this.html();
         this.css();
         this.scripts();
     }
 
-    html(theData, shouldFilter = false) {
+    html() {
+        this.shadowRoot.innerHTML = `
+            <filter-form ${this.darkThemeClassManager()}></filter-form>
+            <div id="jobListingsInnerContainer">
+                ${this.skeleton( Number(this.getAttribute('listingsPreviewsPerPage')) )}
+            </div>
+            <load-more-button></load-more-button>
+        `;
+        this.removeLoadMoreButton();
+    }
+
+    hydrateMarkup(theData, shouldFilter = false) {
         if (this.numberOfListingsShown > 0) {
             this.currentNumberOfBuckets = 0;
             this.numberOfListingsShown = 0;
@@ -122,13 +134,10 @@ export default class GithubJobsListings extends HTMLElement {
         }
 
         if (!shouldFilter) {
-            this.shadowRoot.innerHTML = `
-                <filter-form ${this.darkThemeClassManager()}></filter-form>
-                <div id="jobListingsInnerContainer">
-                    ${markup}
-                </div>
-                <load-more-button></load-more-button>`;
-                this.currentNumberOfBuckets++;
+            this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML = markup;
+            this.loadListingAnimation();
+            this.bringBackLoadMoreButton();
+            this.currentNumberOfBuckets++;
         } else if (shouldFilter) {
             this.clearListingContainer();
             this.shadowRoot.querySelector('#jobListingsInnerContainer').innerHTML = markup;
@@ -136,6 +145,98 @@ export default class GithubJobsListings extends HTMLElement {
         }
 
         this.darkThemeSync();
+    }
+
+    skeleton(count) {
+        let markup = ``;
+        for (let i = 0; i < count; i++) {
+            if (i === 0) {
+                markup += `
+                <style>
+                    *, *::before, *::after { margin: 0; padding: 0; }
+
+                    .skeleton {
+                        background-color: var(--white);
+                        border-radius: 6px;
+                        min-width: 100%;
+                        padding-top: 49px;
+                        position: relative;
+                    }
+
+                    .shape {
+                        background-color: #e2e2e2;
+                        margin-left: 32px;
+                        position: relative;
+                    }
+
+                    .skeleton > .shape-1 {
+                        border-radius: 6px;
+                        position: absolute;
+                        top: -25px;
+                        height: 50px;
+                        width: 50px;
+                    }
+
+                    .skeleton > .shape-2 {
+                        height: 19px;
+                        margin-bottom: 16px;
+                        width: 42%;
+                    }
+
+                    .skeleton > .shape-3 {
+                        height: 20px;
+                        margin-bottom: 17px;
+                        width: 68.57%;
+                    }
+
+                    .skeleton > .shape-4 {
+                        height: 16px;
+                        margin-bottom: 41px;
+                        width: 35.71%;
+                    }
+
+                    .skeleton > .shape-5 {
+                        height: 14px;
+                        margin-bottom: 35px;
+                        width: 27.42%;
+                    }
+
+                    .shape::after {
+                        display: block;
+                        content: "";
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        transform: translateX(-100%);
+                        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                        animation-name: loading;
+                        animation-duration: 0.8s;
+                        animation-iteration-count: infinite;
+                    }
+
+                    @keyframes loading {
+                        0% {
+                            transform: translateX(0%);
+                        }
+                        100% {
+                            transform: translateX(100%);
+                        }
+                    }
+                </style>
+            `;
+            }
+            markup += `
+                <div class="skeleton">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
+                    <div class="shape shape-4"></div>
+                    <div class="shape shape-5"></div>
+                </div>
+            `;
+        }
+        
+        return markup;
     }
 
     css() {
@@ -209,7 +310,6 @@ export default class GithubJobsListings extends HTMLElement {
 
     scripts() {
         this.clickEvents();
-        this.loadListingAnimation();
     }
 
     captureAndPublish(event) {
@@ -311,7 +411,8 @@ export default class GithubJobsListings extends HTMLElement {
             return false;
         }
 
-        if (filterCriteria.location && !theData.location.toLowerCase().includes( filterCriteria.location.toLowerCase() )){
+        if (filterCriteria.location &&
+            !theData.location.toLowerCase().includes( filterCriteria.location.toLowerCase() )){
             return true;
         }
 
