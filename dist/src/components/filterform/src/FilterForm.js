@@ -430,9 +430,9 @@ export default class FilterForm extends HTMLElement {
             }
         });
 
-        window.addEventListener('scroll', () => {
-            filterFormModal.setAttribute('open', "false");
-        });
+        // window.addEventListener('scroll', () => {
+        //     filterFormModal.setAttribute('open', "false");
+        // });
 
         window.addEventListener('resize', () => {
             if (window.outerWidth > 375) {
