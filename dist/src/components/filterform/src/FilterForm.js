@@ -406,7 +406,7 @@ export default class FilterForm extends HTMLElement {
             case false: 
                 filterFormModal.setAttribute('open', "true");
                 this.closeFilterModalEvent();
-            break;
+                break;
         }
     }
 
@@ -416,7 +416,7 @@ export default class FilterForm extends HTMLElement {
 
             switch (id) {
                 case 'filterIcon': this.openFilterModal();
-                break;
+                    break;
             }
         });
     }
@@ -424,21 +424,21 @@ export default class FilterForm extends HTMLElement {
     closeFilterModalEvent() {
         const filterFormModal = this.shadowRoot.querySelector('filter-form-modal');
 
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                filterFormModal.setAttribute('open', "false");
-            }
-        });
+        // window.addEventListener('keydown', (event) => {
+        //     if (event.key === 'Escape') {
+        //         filterFormModal.setAttribute('open', "false");
+        //     }
+        // });
 
         // window.addEventListener('scroll', () => {
         //     filterFormModal.setAttribute('open', "false");
         // });
 
-        window.addEventListener('resize', () => {
-            if (window.outerWidth > 375) {
-                filterFormModal.setAttribute('open', "false");
-            }
-        });
+        // window.addEventListener('resize', () => {
+        //     if (window.outerWidth > 414) {
+        //         filterFormModal.setAttribute('open', "false");
+        //     }
+        // });
     }
 
     clickEvents() {
