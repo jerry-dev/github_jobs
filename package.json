@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "browserSync": "browser-sync start --index public/index.html --browser chrome --server --files=src",
-    "browserSyncDist": "browser-sync start --index dist/index.html --browser chrome --server --files=src",
+    "launchApp": "wslview ./dist/index.html",
     "build-favicon": "cp -r ./public/favicon.svg ./dist/",
     "build-src": "cp -r ./src ./dist/",
-    "build-rollup": "./node_modules/.bin/rollup ./src/components/app/src/GithubJobsApp.js --file dist/src/components/app/src/GithubJobsApp.js --format umd --name GithubJobsApp -m",
-    "build-terser": "./node_modules/.bin/terser ./dist/src/components/app/src/GithubJobsApp.js -o ./dist/src/components/app/src/GithubJobsApp.js -m",
-    "build-app": "npm run build-favicon && npm run build-src && npm run build-rollup && npm run build-terser"
+    "build-rollup": "./node_modules/.bin/rollup ./src/components/app/src/GithubJobsApp.js --file dist/src/app/GithubJobsApp.js --format iife --name GithubJobsApp -m",
+    "build-terser": "./node_modules/.bin/terser ./dist/src/app/GithubJobsApp.js -o ./dist/src/app/GithubJobsApp.js -m",
+    "remove-dist-components": "rm -r ./dist/src/components",
+    "remove-dist-utils": "rm -r ./dist/src/utils",
+    "clean-dist": "npm run remove-dist-components && npm run remove-dist-utils",
+    "build-app": "npm run build-favicon && npm run build-src && npm run build-rollup && npm run build-terser && npm run clean-dist"
   },
   "keywords": [],
   "author": "",
