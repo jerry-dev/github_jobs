@@ -141,9 +141,10 @@ export default class FilterFormModal extends HTMLElement {
                 }
 
                 .iconInputGroup:nth-child(1) span {
+                    XXXalign-items: center;
                     display: flex;
                     flex-direction: row;
-                    height: 24px;
+                    max-height: 24px;
                 }
 
                 .iconInputGroup:nth-child(1) span img {
@@ -154,7 +155,8 @@ export default class FilterFormModal extends HTMLElement {
                 .iconInputGroup:nth-child(1) input {
                     border: none;
                     font-size: var(--font-size-1);
-                    padding-top: 12px;
+                    height: 16px;
+                    padding-top: 4px;
                 }
 
                 .iconInputGroup span {

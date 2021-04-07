@@ -93,7 +93,7 @@ export default class FilterForm extends HTMLElement {
                 }
 
                 :host(.darktheme) #filterIcon {
-                    content:url("../src/assets/icons/mobile/icon-filter-white.svg");
+                    content: url("../src/assets/icons/mobile/icon-filter-white.svg");
                 }
 
                 .mobileIcons {
