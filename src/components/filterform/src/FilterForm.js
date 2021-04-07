@@ -424,21 +424,21 @@ export default class FilterForm extends HTMLElement {
     closeFilterModalEvent() {
         const filterFormModal = this.shadowRoot.querySelector('filter-form-modal');
 
-        // window.addEventListener('keydown', (event) => {
-        //     if (event.key === 'Escape') {
-        //         filterFormModal.setAttribute('open', "false");
-        //     }
-        // });
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                filterFormModal.setAttribute('open', "false");
+            }
+        });
 
-        // window.addEventListener('scroll', () => {
-        //     filterFormModal.setAttribute('open', "false");
-        // });
+        window.addEventListener('scroll', () => {
+            filterFormModal.setAttribute('open', "false");
+        });
 
-        // window.addEventListener('resize', () => {
-        //     if (window.outerWidth > 414) {
-        //         filterFormModal.setAttribute('open', "false");
-        //     }
-        // });
+        window.addEventListener('resize', () => {
+            if (window.outerWidth > 500) {
+                filterFormModal.setAttribute('open', "false");
+            }
+        });
     }
 
     clickEvents() {
