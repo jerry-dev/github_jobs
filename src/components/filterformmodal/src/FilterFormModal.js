@@ -105,10 +105,15 @@ export default class FilterFormModal extends HTMLElement {
                     animation-duration: 0.8s;
                 }
 
+                input {
+                    height: 100%;
+                }
+
                 :host(.darktheme) #filterModal {
                     background-color: var(--very-dark-blue);
                 }
 
+                :host(.darktheme) input,
                 :host(.darktheme) label {
                     color: var(--white);
                 }
